@@ -42,13 +42,13 @@ public class MainFrame extends JFrame {
 	
 	static JFrame f = new JFrame();//do option pane
 	
-	public MainFrame() throws LineUnavailableException{	
+	public MainFrame() throws LineUnavailableException, IOException{	
 		this.mainFrame = this;
 		
 		this.setSize(360,520);
 		this.setResizable(true);//zeby rozmiar okna byl staly
 		this.setMinimumSize(new Dimension(360,520));//ustawia minimalny rozmiar okna
-		this.setTitle("Symulator efektu Dopplera");
+		this.setTitle("Gawarit-Gawarit");
 		//ImageIcon mainIcon = new ImageIcon(this.getClass().getResource("/MainIcon.png"));
 		//this.setIconImage(mainIcon.getImage());
 		
@@ -126,7 +126,7 @@ public class MainFrame extends JFrame {
 				
 				try {
 					mainFrame = new MainFrame();
-				} catch (LineUnavailableException e) {					
+				} catch (LineUnavailableException | IOException e) {					
 					e.printStackTrace();
 				}
 				mainFrame.setVisible(true);
