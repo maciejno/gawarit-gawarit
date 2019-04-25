@@ -1,4 +1,4 @@
-package src;
+package client;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
@@ -35,7 +35,6 @@ public class GUI extends JPanel {
         gui.setLayout(new BorderLayout());
         
         textArea.setText(invitation);//ustawia wiadomosc powitalna
-        
         
         gui.add(login, BorderLayout.NORTH);
         gui.add(send, BorderLayout.SOUTH);
