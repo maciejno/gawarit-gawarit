@@ -14,8 +14,4 @@ public class GUI extends JPanel{
 	   	gui = this;
 		this.mainFrame = mainFrame;
    }
-
-public static void main (){
-	   System.out.println("chyba dzia³a");
-   }
-}
+   
