@@ -13,7 +13,7 @@ public class User {
     private String Password;
     private List<String> Friends = new ArrayList<String>();
 
-    User(String login) {
+    public User(String login) {
         InputStreamReader streamReader = null;
         BufferedReader bufferedReader = null;
         try {
