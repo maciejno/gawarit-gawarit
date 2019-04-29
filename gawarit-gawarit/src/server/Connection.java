@@ -14,11 +14,11 @@ public class Connection {
 
 
     public static void main(String[] args) throws Exception{
-        //User test = new User("Ivan42");
+        User test = new User("Ivan42");
         ExecutorService executorService = Executors.newFixedThreadPool(42);
         serverSocket = new ServerSocket(38);
         System.out.println("Uruchomiono serwer");
-        //test.PrintInfo();
+        test.PrintInfo();
         while (true) {
             socket = serverSocket.accept();
             Runnable connection = new Runnable() {
