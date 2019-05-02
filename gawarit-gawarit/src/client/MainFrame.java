@@ -80,7 +80,7 @@ public class MainFrame extends JFrame {
 		end.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				JOptionPane.showMessageDialog(null,"Au revoir!", null, JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null,"до свидания!", null, JOptionPane.INFORMATION_MESSAGE);
 				System.exit(1);	
 			}			
 		});

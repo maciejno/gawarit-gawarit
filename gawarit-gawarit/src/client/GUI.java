@@ -26,10 +26,10 @@ public class GUI extends JPanel {
         gui = this;
         this.mainFrame = mainFrame;
         
-        invitation = new String("Zaloguj siê by s³aæ wiadomoœci na ca³y œwiat!");
+        invitation = new String("Zaloguj siÄ™ by sÅ‚aÄ‡ wiadomoÅ›ci na caÅ‚y Å›wiat!");
         
         login = new JButton("Zaloguj");
-        send = new JButton("Wyœlij");
+        send = new JButton("Wyï¿½lij");
         textArea = new JEditorPane();
         scrollPane = new JScrollPane(textArea);
         gui.setLayout(new BorderLayout());
