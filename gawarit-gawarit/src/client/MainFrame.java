@@ -49,8 +49,8 @@ public class MainFrame extends JFrame {
 		this.setResizable(true);//zeby rozmiar okna byl staly
 		this.setMinimumSize(new Dimension(360,520));//ustawia minimalny rozmiar okna
 		this.setTitle("Gawarit-Gawarit");
-		//ImageIcon mainIcon = new ImageIcon(this.getClass().getResource("/MainIcon.png"));
-		//this.setIconImage(mainIcon.getImage());
+		ImageIcon mainIcon = new ImageIcon(this.getClass().getResource("/logo_mini.png"));
+		this.setIconImage(mainIcon.getImage());
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
