@@ -3,18 +3,23 @@ package client;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-public class GuiLoginFrame extends JPanel{
+
+public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener{
+	
+	private static final long serialVersionUID = 1L;
+	
 	GuiLoginFrame gui;
     LoginFrame loginFrame;
     Font labelFont;
@@ -24,7 +29,7 @@ public class GuiLoginFrame extends JPanel{
 	JTextField passField;
 	JTextField newLoginField;
 	JTextField newPassField;
-	JTextField pass2Field;
+	JTextField newPass2Field;
     JButton loginButton;
     JButton signButton;
     
@@ -40,6 +45,12 @@ public class GuiLoginFrame extends JPanel{
     JPanel downPanel;
     JPanel loginPanel;
     JPanel signPanel;
+    
+    String login = "";
+    String password = "";
+    String newLogin = "";
+    String newPassword = "";
+    String newPassword2 = "";
 
     public GuiLoginFrame(LoginFrame loginFrame) throws IOException {
 	    gui = this;
@@ -60,7 +71,7 @@ public class GuiLoginFrame extends JPanel{
 		passField = new JTextField("");
 		newLoginField = new JTextField("");
 		newPassField = new JTextField("");
-		pass2Field = new JTextField("");
+		newPass2Field = new JTextField("");
 		loginLabel = new JLabel("Login:");
 		passLabel = new JLabel("Hasło:");
 		newLoginLabel = new JLabel("Login:");
@@ -91,7 +102,7 @@ public class GuiLoginFrame extends JPanel{
 		signPanel.add(newPassLabel);
 		signPanel.add(newPassField);
 		signPanel.add(pass2Label);
-		signPanel.add(pass2Field);
+		signPanel.add(newPass2Field);
 		 
 		downPanel.add(signLabel, BorderLayout.NORTH);
 		downPanel.add(signPanel, BorderLayout.CENTER);
@@ -100,7 +111,64 @@ public class GuiLoginFrame extends JPanel{
 	    this.add(upPanel);
 	    this.add(downPanel);
 	    
-       
-        
-    }
+	    //dodanie listenerów
+	    loginField.addKeyListener(this);
+	    passField.addKeyListener(this);
+	    newLoginField.addKeyListener(this);
+	    newPassField.addKeyListener(this);
+	    newPass2Field.addKeyListener(this);
+	    
+	    loginButton.addActionListener(this);
+		loginButton.setActionCommand("login");
+		signButton.addActionListener(this);
+		signButton.setActionCommand("sign");
+	           
+    } //koniec konstruktora
+    
+   /* 
+       JButton loginButton;
+       JButton signButton;*/
+    
+    static boolean isTextFieldEmpty(JTextField triedTextField) throws EmptyTextFieldException{
+		if (triedTextField.getText()==null) 
+			throw new EmptyTextFieldException(triedTextField);
+		return true;
+	}
+    
+  //listenery do pol tekstowych
+  	public void keyReleased(KeyEvent arg0) {
+  		try {
+			if(! loginField.getText().equals(login)) {
+				login = loginField.getText();
+			}
+			else if(! passField.getText().equals(password)) {
+				password = passField.getText();
+			}	
+			else if(! newLoginField.getText().equals(newLogin)) {
+				newLogin = newLoginField.getText();
+			}	
+			else if(! newPassField.getText().equals(newPassword)) {
+				newPassword = newPassField.getText();
+			}
+			else if(! newPass2Field.getText().equals(newPassword2)) {
+				newPassword2 = newPass2Field.getText();
+			}
+  		}
+  		catch(Exception e) {
+  			System.err.println("Blad key listener - moze puste pole! (?)");
+  		}		
+  	}
+	public void keyPressed(KeyEvent arg0) {}
+	public void keyTyped(KeyEvent arg0) {}
+
+	
+	public void actionPerformed(ActionEvent ae) {
+		String action = ae.getActionCommand();
+		if(action.equals("login")) {
+			
+		}
+		if(action.equals("sign")) {
+			
+		}
+	}
 }

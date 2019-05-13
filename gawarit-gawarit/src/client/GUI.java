@@ -40,6 +40,7 @@ public class GUI extends JPanel {
         friendLabel = new JLabel("Do kogo chcesz napisać?");
         chooseFriend = new JComboBox<String>();
         dodajField = new JTextField("");
+        usunField = new JTextField("");
 
         gui.setLayout(new BorderLayout());
         panelCenter.setLayout(new GridLayout(2,2));

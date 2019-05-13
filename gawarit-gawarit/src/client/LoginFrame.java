@@ -29,8 +29,6 @@ public class LoginFrame extends JFrame{
 		GuiLoginFrame userInterface;
 		LoginFrame mainFrame;
 		
-		
-		
 		JPanel panel;
 		String text = "";
 		
@@ -50,26 +48,10 @@ public class LoginFrame extends JFrame{
 			this.setLayout(new BorderLayout());
 			
 			userInterface = new GuiLoginFrame(this);
-			this.add(userInterface, BorderLayout.CENTER);	
-		
+			this.add(userInterface, BorderLayout.CENTER);
 			
 			
-			panel = new JPanel();
-			panel.setLayout(new GridLayout(1,1));
-			
-			f.setSize(640,480);
-			f.setLayout(new GridLayout(1,1));
-			f.add(panel);
-			
-			/*end.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent ae) {
-					JOptionPane.showMessageDialog(null,"до свидания!", null, JOptionPane.INFORMATION_MESSAGE);
-					System.exit(1);	
-				}			
-			});*/
-			
-			//USTAWIENIE LOOKAND FEEL
+			//USTAWIENIE LOOK AND FEEL
 			try{          
 	        	UIManager.setLookAndFeel ("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");            
 	        }catch (Exception e1){
@@ -92,34 +74,6 @@ public class LoginFrame extends JFrame{
 				}
 			});				
 		}
-		protected String readTextFile(String fileName) {
-			InputStreamReader streamReader = null;
-			BufferedReader bufferedReader = null;
-			String readText = "";
-			try {							
-				InputStream inputStream = getClass().getResourceAsStream("/" + fileName + ".txt");
-				streamReader = new InputStreamReader(inputStream); // Otwieramy readera
-				bufferedReader = new BufferedReader(streamReader); // Buforujemy readera
-				String line;//na linie tekstu
-				line = bufferedReader.readLine();//wczytanie linii tekstu do bufora
-
-				while (line != null) { // readLine() zwraca null jesli plik sie skonczyl
-					//System.out.println(line);	 			
-					readText += line + "\n";
-					line = bufferedReader.readLine();
-				}
-			}catch (Exception e) {	
-				System.err.println("Blad przy otwarciu");
-				readText = "";				
-			}
-			try {				
-				streamReader.close();
-				bufferedReader.close();
-			} catch (IOException e) {
-				System.err.println("BLAD PRZY ZAMYKANIU PLIKU!");
-				System.exit(3);
-				}
-			return readText;
-		}			
+		
 	}
 
