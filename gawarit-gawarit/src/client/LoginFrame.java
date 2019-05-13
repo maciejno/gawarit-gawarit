@@ -2,25 +2,12 @@ package client;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.ImageIcon;
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 	
 public class LoginFrame extends JFrame{
@@ -58,22 +45,6 @@ public class LoginFrame extends JFrame{
 	            e1.printStackTrace();
 	            System.err.println("Blad podczas ustawiania LookAndFeel");
 	        }		
-		}
-
-		public static void main(String[] args) {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					JFrame loginFrame = null;
-					
-					try {
-						loginFrame = new LoginFrame();
-					} catch (LineUnavailableException | IOException e) {					
-						e.printStackTrace();
-					}
-					loginFrame.setVisible(true);
-				}
-			});				
-		}
-		
+		}		
 	}
 
