@@ -51,6 +51,8 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
     String newLogin = "";
     String newPassword = "";
     String newPassword2 = "";
+    String message = "";
+    String response = "";
 
     public GuiLoginFrame(LoginFrame loginFrame) throws IOException {
 	    gui = this;
@@ -165,7 +167,23 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 	public void actionPerformed(ActionEvent ae) {
 		String action = ae.getActionCommand();
 		if(action.equals("login")) {
-			
+			message = "~$instr&\r\n" + 
+					"~$login&\r\n" + 
+					"login" + "\r\n" + 
+					"password" + "\r\n" + 
+					"~$end&\r\n";
+			try {
+				response = Client.communicate(message);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			@SuppressWarnings("unused")
+			String [] lines = response.split(System.getProperty("line.separator"));
+			if(lines[1]=="~$accpass&") {
+				
+			}else {
+				
+			}
 		}
 		if(action.equals("sign")) {
 			
