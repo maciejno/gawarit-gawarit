@@ -16,7 +16,7 @@ public class Connection {
 
     public static void main(String[] args) throws Exception{
         ExecutorService executorService = Executors.newFixedThreadPool(42);
-        serverSocket = new ServerSocket(38);
+        serverSocket = new ServerSocket(44242);
         System.out.println("Uruchomiono Serwer.");
         while (true) {
             socket = serverSocket.accept();

@@ -32,9 +32,6 @@ public class MainFrame extends JFrame {
 	JMenuBar menuBar;
 	JMenu menu;
 	JMenuItem end;
-	JMenuItem about;
-	JMenuItem tips;
-	JMenuItem pro;
 	
 	JEditorPane textArea;
 	JPanel panel;
@@ -59,14 +56,11 @@ public class MainFrame extends JFrame {
 
 		menuBar = new JMenuBar();
 		menu = new JMenu("Plik");
-		end = new JMenuItem("Koniec programu");
-		about = new JMenuItem("O programie");
-		tips = new JMenuItem("Tips & tricks");
-		pro = new JMenuItem("Wersja premium");		
+		end = new JMenuItem("Koniec programu");		
 		
 		this.setJMenuBar(menuBar);
 		menuBar.add(menu);
-		menu.add(about);menu.add(tips);menu.add(pro);menu.add(end);		
+		menu.add(end);		
 		
 		textArea = new JEditorPane();
 		panel = new JPanel();panel.setLayout(new GridLayout(1,1));
@@ -84,31 +78,6 @@ public class MainFrame extends JFrame {
 			}			
 		});
 		
-		about.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent ae) {	
-				f.setVisible(true);
-				text = readTextFile("OProgramie");
-				textArea.setText(text);
-			}			
-		});
-		tips.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				f.setVisible(true);
-				text = readTextFile("TipsTricks");
-				textArea.setText(text);
-			}			
-		});
-		pro.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				f.setVisible(true);
-				text = readTextFile("ProPL");				
-				textArea.setText(text);
-			}			
-		});
-		
 		//USTAWIENIE LOOKAND FEEL
 		try{          
         	UIManager.setLookAndFeel ("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");            
@@ -118,20 +87,6 @@ public class MainFrame extends JFrame {
         }		
 	}
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				JFrame mainFrame = null;
-				
-				try {
-					mainFrame = new MainFrame();
-				} catch (LineUnavailableException | IOException e) {					
-					e.printStackTrace();
-				}
-				mainFrame.setVisible(true);
-			}
-		});				
-	}
 	protected String readTextFile(String fileName) {
 		InputStreamReader streamReader = null;
 		BufferedReader bufferedReader = null;
@@ -164,6 +119,5 @@ public class MainFrame extends JFrame {
 	
 	public JMenu getMenu() {return menu;};
 	public JMenuItem getEnd() {return end;};
-	public JMenuItem getAbout() {return about;} 
-	public JMenuItem getPro() {return pro;}
+	public GUI getGui() {return userInterface;}
 }

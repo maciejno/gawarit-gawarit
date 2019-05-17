@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -169,24 +170,58 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 		if(action.equals("login")) {
 			message = "~$instr&\r\n" + 
 					"~$login&\r\n" + 
-					"login" + "\r\n" + 
-					"password" + "\r\n" + 
+					login + "\r\n" + 
+					password + "\r\n" + 
 					"~$end&\r\n";
 			try {
-				response = Client.communicate(message);
+				response = Client.communicate(message);//wysyla i odbiera
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			@SuppressWarnings("unused")
+			
 			String [] lines = response.split(System.getProperty("line.separator"));
 			if(lines[1]=="~$accpass&") {
-				
+				for(int i = 2;i < lines.length ;i++) {
+					
+					Client.friendsMap.put(lines[i], new Boolean(lines[i+1]));//umieszcza otrzymaną listę z serwera w liście w pamięci
+										//nazwa uzytkownika //true lub false					
+				}
+				//ustawia widoczność okienek
+				Client.framesMap.put(Client.loginFrame, false);
+				Client.framesMap.put(Client.mainFrame, true);
+				Client.setVisibleFrames();
+			}else if(lines[1]=="~$rejpass&") {
+				JOptionPane.showMessageDialog(null,lines[2], null, JOptionPane.INFORMATION_MESSAGE);
+				System.out.println("Błędne dane logowania");
 			}else {
-				
+				JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
+				System.out.println("Coś poszło nie tak");
 			}
 		}
 		if(action.equals("sign")) {
-			
+			if(newPassword.equals(newPassword2)) {
+				message = "~$instr&\r\n" + 
+						"~$register&\r\n" + 
+						newLogin + "\r\n" + 
+						newPassword + "\r\n" + 
+						"~$end&\r\n";
+				try {
+					response = Client.communicate(message);//wysyla i odbiera
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				String [] lines = response.split(System.getProperty("line.separator"));
+				if(lines[1]=="~$accpass&") {
+					Client.friendsMap.clear();
+					//ustawia widoczność okienek
+					Client.framesMap.put(Client.loginFrame, false);
+					Client.framesMap.put(Client.mainFrame, true);
+					Client.setVisibleFrames();
+				}
+			}else {
+				JOptionPane.showMessageDialog(null, "Hasła nie są zgodne!!!", null, JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
 	}
 }

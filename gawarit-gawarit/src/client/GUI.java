@@ -57,4 +57,13 @@ public class GUI extends JPanel {
         gui.add(logoutB, BorderLayout.SOUTH);
         gui.add(panelCenter, BorderLayout.CENTER);        
     }
+    
+    public JComboBox<String> getChooseFriend(){return chooseFriend;}
+    
+    public static void updateFriendsList() {//odświeża combo box ze znajomymi
+    	Client.mainFrame.getGui().getChooseFriend().removeAllItems();
+    	for(String key : Client.friendsMap.keySet()) {
+    		Client.mainFrame.getGui().getChooseFriend().addItem(key);
+    	}
+    }
 }
