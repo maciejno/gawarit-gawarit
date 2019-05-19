@@ -7,55 +7,62 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Connection {
+public class Connection implements Runnable {
 
-    private static ServerSocket serverSocket;
-    private static Socket socket;
-    private static String line=null;
+    public User user = null; //na razie null bo nie wiadomo kto to
+    String line = null;
+
+    private final BufferedReader reciever;
+    private final BufferedWriter transmitter;
+    Socket socket;
 
 
-    public static void main(String[] args) throws Exception{
-        ExecutorService executorService = Executors.newFixedThreadPool(42);
-        serverSocket = new ServerSocket(44242);
-        System.out.println("Uruchomiono Serwer.");
-        while (true) {
-            socket = serverSocket.accept();
-            System.out.println("Nowa proba polaczenia...");
-            Runnable connection = new Runnable() {
-                @Override
-                public void run() {
-                    try{
-                        BufferedReader reciever= new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        BufferedWriter transmitter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                        System.out.println("Nawiazano polaczenie.");
-
-                        if(!reciever.readLine().equals("~$instr&")) { //procedura logowania
-                            System.out.println("Niepoprawny protokol. Koniec polaczenia.");
-                            socket.close();
-                            return;
-                        }
-                        if(!reciever.readLine().equals("~$login&")) {
-                            System.out.println("Niepoprawny protokol. Koniec polaczenia.");
-                            socket.close();
-                            return;
-                        }
-                        //User user = new User();
-                        while (true){
-
-                            //pisacz.write("Odpowiadam: ");
-                            //pisacz.write(line);
-                            //pisacz.write("\n");
-                            //pisacz.flush();
-                            //line = czytacz.readLine();
-                        }
-                        //socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        System.out.println("Polaczenie nie powiodlo sie.");
-                    }
-                }
-            };
-            executorService.submit(connection);
-        }
+    public Connection(Socket sckt, BufferedReader recv, BufferedWriter trans) {
+        socket = sckt;
+        reciever = recv;
+        transmitter = trans;
     }
+
+    @Override
+    public void run() {
+        //procedura logowania
+        System.out.println("Polaczenie nawiazane.");
+        try {
+            line = reciever.readLine();
+            if(!line.equals("~$instr&")){ //procedura logowania
+                System.out.println("Niepoprawny protokol. Koniec polaczenia.");
+                socket.close();
+                return;
+            }
+            line = reciever.readLine();
+            if(!line.equals("~$login&")) {
+                System.out.println("Niepoprawny protokol. Koniec polaczenia.");
+                socket.close();
+                return;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        while(3>2) {
+            try {
+                transmitter.write("Odpowiadam: ");
+                line = reciever.readLine();
+                transmitter.write(line);
+                transmitter.write("\n");
+                transmitter.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /*
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+         */
+    }
+
 }
