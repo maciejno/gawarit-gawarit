@@ -8,27 +8,37 @@ import java.util.List;
 
 public class User {
 
-    private String username;
+    public String username;
     private String password;
-    private List<String> friends = new ArrayList<String>();
+    public List<String> friends = new ArrayList<String>();
 
-    public User(String login) {
+    public User() {
+        //tu chyba jednak nic nie będzie... :(
+        }
 
+    boolean login(String login, String pass) {
+
+        if(false) {
+         System.out.println("ni ma tego pliku???");
+            return false;
+        }
+        username=login;
         InputStreamReader streamReader = null;
         BufferedReader bufferedReader = null;
         try {
             InputStream inputStream = getClass().getResourceAsStream("/" + login + ".txt");
             streamReader = new InputStreamReader(inputStream); // Otwieramy readera
             bufferedReader = new BufferedReader(streamReader); // Buforujemy readera
-            password = bufferedReader.readLine();//wczytanie linii tekstu do bufora
-            username=login;
+            String truePass = bufferedReader.readLine();//wczytanie linii tekstu do bufora
+            if(!pass.equals(truePass))
+                return false;
+
             String friend;
             while(true){
-               friend =  bufferedReader.readLine();
+                friend =  bufferedReader.readLine();
                 if(friend!=null) friends.add(friend);
                 else break;
             }
-
         }catch (Exception e) {
             System.err.println("Blad przy otwarciu pliku");
         }
@@ -36,10 +46,15 @@ public class User {
             streamReader.close();
             bufferedReader.close();
         } catch (IOException e) {
-            System.err.println("BLAD PRZY ZAMYKANIU PLIKU!");
-            System.exit(3);
+            System.err.println("Blad przy zamykaniu pliku.");
         }
+        return true;
     }
+
+    void register(String login, String pass) {
+
+    }
+
 
     void PrintInfo() { //do debugowania
         System.out.println("Username: " + username );
