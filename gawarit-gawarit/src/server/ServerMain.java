@@ -38,15 +38,17 @@ public class ServerMain {
         Monitor("Uruchomiono Serwer.");
         Monitor("IP: " + java.net.InetAddress.getLocalHost().getHostAddress().toString());
         Monitor("Port:  " + serverSocket.getLocalPort());
-        //Monitor("\n");
+        Monitor("");
+        int i=0;
         while (true) {
             Socket socket = serverSocket.accept();
             ServerMain.Monitor("Nowa proba polaczenia...");
             //BufferedReader reciever= new BufferedReader(new InputStreamReader(socket.getInputStream()));
             //BufferedWriter transmitter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            Connection connect = new Connection(socket, connections);
+            Connection connect = new Connection(i, socket, connections);
             Thread thread = new Thread(connect);
-            connections.add(connect);
+            connections.add(i, connect);
+            i++;
             thread.start();
         }
     }

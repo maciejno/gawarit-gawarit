@@ -11,6 +11,7 @@ public class Connection implements Runnable {
 
     public User user = new User();
     String line = null;
+    private final int i;
 
     BufferedReader reciever;
     BufferedWriter transmitter;
@@ -18,8 +19,9 @@ public class Connection implements Runnable {
     Vector<Connection> connections;
 
 
-    public Connection(Socket sckt,Vector<Connection> conn) {
+    public Connection(int index, Socket sckt,Vector<Connection> conn) {
         socket = sckt;
+        i = index;
         try {
             reciever = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             transmitter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -43,6 +45,7 @@ public class Connection implements Runnable {
             if((!line.equals("~$login&"))&&(!line.equals("~$register&"))) {
                 ServerMain.Monitor("Niepoprawny protokol. Koniec polaczenia. (~$login& / ~$register&)");
                 socket.close();
+                ServerMain.connections.remove(i);
                 return;
             }
             ServerMain.Monitor("Zapytanie poprawne...");
@@ -51,7 +54,7 @@ public class Connection implements Runnable {
             if(!reciever.readLine().equals("~$end&")) {
                 ServerMain.Monitor("Niepoprawny protokol. Koniec polaczenia. (endless)");
                 socket.close();
-                ServerMain.connections.remove(this);
+                ServerMain.connections.remove(i);
                 return;
             }
             ServerMain.Monitor("Nowy uzytkownik identyfikuje sie jako: " + login);
@@ -121,8 +124,12 @@ public class Connection implements Runnable {
             for (String friend : user.friends) {
                 transmitter.write(friend);
                 transmitter.write("\n");
-                for(Connection conn : connections) {
-
+                for (Connection conn : connections) {
+                    if (conn.user.username.equals(friend))
+                        transmitter.write("true");
+                    else
+                        transmitter.write("false");
+                    transmitter.write("\n");
                 }
             }
             transmitter.write("~$end&");
