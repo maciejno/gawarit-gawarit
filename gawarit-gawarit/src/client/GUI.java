@@ -60,10 +60,15 @@ public class GUI extends JPanel {
     
     public JComboBox<String> getChooseFriend(){return chooseFriend;}
     
-    public static void updateFriendsList() {//odświeża combo box ze znajomymi
+    public static void updateFriendsBox() {//odświeża combo box ze znajomymi
     	Client.mainFrame.getGui().getChooseFriend().removeAllItems();
+    	String status = null;
+    	String item = null;
     	for(String key : Client.friendsMap.keySet()) {
-    		Client.mainFrame.getGui().getChooseFriend().addItem(key);
+    		if(Client.friendsMap.get(key)) status = " on";
+    		else status = " off";
+    		item = key + status;
+    		Client.mainFrame.getGui().getChooseFriend().addItem(item);
     	}
     }
 }

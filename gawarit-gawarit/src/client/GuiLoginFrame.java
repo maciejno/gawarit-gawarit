@@ -141,21 +141,21 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
     
   //listenery do pol tekstowych
   	public void keyReleased(KeyEvent arg0) {
-  		try {
+  		try { 			  			
 			if(! loginField.getText().equals(login)) {
 				login = loginField.getText();
 			}
-			else if(! passField.getPassword().toString().equals(password)) {
-				password = passField.getPassword().toString();
+			else if(! (new String(passField.getPassword())).equals(password)) {
+				password = new String(passField.getPassword());
 			}	
 			else if(! newLoginField.getText().equals(newLogin)) {
 				newLogin = newLoginField.getText();
 			}	
-			else if(! newPassField.getPassword().toString().equals(newPassword)) {
-				newPassword = newPassField.getPassword().toString();
+			else if(! (new String(newPassField.getPassword())).equals(newPassword)) {
+				newPassword = new String(newPassField.getPassword());
 			}
-			else if(! newPass2Field.getPassword().toString().equals(newPassword2)) {
-				newPassword2 = newPass2Field.getPassword().toString();
+			else if(! (new String(newPass2Field.getPassword())).equals(newPassword2)) {
+				newPassword2 = new String(newPass2Field.getPassword());
 			}
   		}
   		catch(Exception e) {
