@@ -10,7 +10,7 @@ import java.util.Vector;
 
 public class ServerMain {
 
-    private static Vector<Connection> connections = new Vector<Connection>();
+    public static Vector<Connection> connections = new Vector<Connection>();
 
     private static JFrame f;
     private static JTextArea textArea;

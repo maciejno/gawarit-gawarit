@@ -51,6 +51,7 @@ public class Connection implements Runnable {
             if(!reciever.readLine().equals("~$end&")) {
                 ServerMain.Monitor("Niepoprawny protokol. Koniec polaczenia. (endless)");
                 socket.close();
+                ServerMain.connections.remove(this);
                 return;
             }
             ServerMain.Monitor("Nowy uzytkownik identyfikuje sie jako: " + login);
@@ -120,6 +121,9 @@ public class Connection implements Runnable {
             for (String friend : user.friends) {
                 transmitter.write(friend);
                 transmitter.write("\n");
+                for(Connection conn : connections) {
+
+                }
             }
             transmitter.write("~$end&");
             transmitter.write("\n");
