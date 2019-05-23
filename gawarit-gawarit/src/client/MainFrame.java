@@ -41,9 +41,9 @@ public class MainFrame extends JFrame {
 	
 	public MainFrame() throws LineUnavailableException, IOException{	
 		this.mainFrame = this;
-		this.setSize(300,200);
+		this.setSize(300,250);
 		this.setResizable(true);//zeby rozmiar okna byl staly
-		this.setMinimumSize(new Dimension(300,200));//ustawia minimalny rozmiar okna
+		this.setMinimumSize(new Dimension(300,250));//ustawia minimalny rozmiar okna
 		this.setTitle("Gawarit-Gawarit");
 		ImageIcon mainIcon = new ImageIcon(this.getClass().getResource("/logo_mini.png"));
 		this.setIconImage(mainIcon.getImage());
