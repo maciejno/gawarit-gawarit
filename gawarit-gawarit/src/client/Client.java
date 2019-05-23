@@ -22,7 +22,7 @@ public class Client {
 	static LoginFrame loginFrame;
 	static MainFrame mainFrame;
 	
-	private static Socket socket;
+	public static Socket socket;
 	static BufferedWriter writer;
 	static BufferedReader reader;
 	
@@ -78,7 +78,7 @@ public class Client {
 	
 	public static void updateFriendsMap(String [] lines) {
 		Client.friendsMap.clear();
-		for(int i = 2;i < lines.length ;i++) {
+		for(int i = 2;i < lines.length ;i+=2) {
 			
 			Client.friendsMap.put(lines[i], new Boolean(lines[i+1]));//umieszcza otrzymaną listę z serwera w liście w pamięci
 								//nazwa uzytkownika //true lub false					

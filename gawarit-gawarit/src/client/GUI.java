@@ -2,21 +2,25 @@ package client;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 
 
-public class GUI extends JPanel {
+public class GUI extends JPanel implements ActionListener{
 
-    GUI gui;
+	private static final long serialVersionUID = 1L;
+	GUI gui;
     MainFrame mainFrame;
     JPanel panelCenter, panelUp;
         
@@ -26,6 +30,11 @@ public class GUI extends JPanel {
     JLabel friendLabel;
     JComboBox<String> chooseFriend;//wybor do kogo piszemy
     JTextField dodajField, usunField; //do dodania/usuniecia znajomego
+    
+    String message = "";
+    String response = "";
+	String newFriend = ""; //znajomy którego dodajemy
+	String badGuy = ""; //którego usuwamy
 
     public GUI(MainFrame mainFrame) throws IOException {
         gui = this;
@@ -71,4 +80,55 @@ public class GUI extends JPanel {
     		Client.mainFrame.getGui().getChooseFriend().addItem(item);
     	}
     }
+
+	@Override
+	public void actionPerformed(ActionEvent ae) {
+		String action = ae.getActionCommand();
+		if(action.equals("logout")) {
+			message = "~$instr&\r\n" + 
+					"~$logout&\r\n" + 					
+					"~$end&\r\n";
+			try {
+				response = Client.communicate(message);//wysyla i odbiera
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+			String [] lines = response.split(System.getProperty("line.separator"));
+			if(lines[0].equals("~$instr&")) {
+				//ustawia widoczność okienek
+				Client.framesMap.put(Client.loginFrame, true);
+				Client.framesMap.put(Client.mainFrame, false);
+				Client.setVisibleFrames();
+			}else {
+				JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
+				System.out.println("Coś poszło nie tak");
+			}
+		}else if(action.equals("add")) {
+			newFriend = dodajField.getText();
+			message = "~$instr&\r\n" + 
+					"~$addfriend&\r\n" + 
+					newFriend + 
+					"~$end&\r\n";
+			try {
+				response = Client.communicate(message);//wysyla i odbiera
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+			String [] lines = response.split(System.getProperty("line.separator"));
+			if(lines[0].equals("~$instr&") && lines[1].equals("~$rejectedinv&")) {
+				//
+				//
+				//
+			}else if(lines[0].equals("~$instr&") && lines[1].equals("~$acceptedinv&")){
+				//
+				//
+				//
+			}else {
+				JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
+				System.out.println("Coś poszło nie tak");
+			}	
+		}else if(action.equals("delete")) {
+			
+		}
+	}
 }
