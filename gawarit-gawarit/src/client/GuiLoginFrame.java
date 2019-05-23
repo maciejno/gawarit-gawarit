@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -27,10 +28,10 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
     GridLayout guiLayout;
     
     JTextField loginField;
-	JTextField passField;
+	JPasswordField passField;
 	JTextField newLoginField;
-	JTextField newPassField;
-	JTextField newPass2Field;
+	JPasswordField newPassField;
+	JPasswordField newPass2Field;
     JButton loginButton;
     JButton signButton;
     
@@ -71,10 +72,10 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 	    loginButton = new JButton("Zaloguj");
 	    signButton = new JButton("Zarejestruj");
 	    loginField = new JTextField("");
-		passField = new JTextField("");
+		passField = new JPasswordField("");
 		newLoginField = new JTextField("");
-		newPassField = new JTextField("");
-		newPass2Field = new JTextField("");
+		newPassField = new JPasswordField("");
+		newPass2Field = new JPasswordField("");
 		loginLabel = new JLabel("Login:");
 		passLabel = new JLabel("Hasło:");
 		newLoginLabel = new JLabel("Login:");
@@ -144,17 +145,17 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 			if(! loginField.getText().equals(login)) {
 				login = loginField.getText();
 			}
-			else if(! passField.getText().equals(password)) {
-				password = passField.getText();
+			else if(! passField.getPassword().toString().equals(password)) {
+				password = passField.getPassword().toString();
 			}	
 			else if(! newLoginField.getText().equals(newLogin)) {
 				newLogin = newLoginField.getText();
 			}	
-			else if(! newPassField.getText().equals(newPassword)) {
-				newPassword = newPassField.getText();
+			else if(! newPassField.getPassword().toString().equals(newPassword)) {
+				newPassword = newPassField.getPassword().toString();
 			}
-			else if(! newPass2Field.getText().equals(newPassword2)) {
-				newPassword2 = newPass2Field.getText();
+			else if(! newPass2Field.getPassword().toString().equals(newPassword2)) {
+				newPassword2 = newPass2Field.getPassword().toString();
 			}
   		}
   		catch(Exception e) {
@@ -167,6 +168,8 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 	
 	public void actionPerformed(ActionEvent ae) {
 		String action = ae.getActionCommand();
+		
+		//LOGOWANIE
 		if(action.equals("login")) {
 			message = "~$instr&\r\n" + 
 					"~$login&\r\n" + 
@@ -180,17 +183,14 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 			}
 			
 			String [] lines = response.split(System.getProperty("line.separator"));
-			if(lines[1]=="~$accpass&") {
-				for(int i = 2;i < lines.length ;i++) {
-					
-					Client.friendsMap.put(lines[i], new Boolean(lines[i+1]));//umieszcza otrzymaną listę z serwera w liście w pamięci
-										//nazwa uzytkownika //true lub false					
-				}
+			if(lines[0].equals("~$instr&") && lines[1].equals("~$accpass&")) {
+				Client.updateFriendsMap(lines);
+				
 				//ustawia widoczność okienek
 				Client.framesMap.put(Client.loginFrame, false);
 				Client.framesMap.put(Client.mainFrame, true);
 				Client.setVisibleFrames();
-			}else if(lines[1]=="~$rejpass&") {
+			}else if(lines[1].equals("~$rejpass&")) {
 				JOptionPane.showMessageDialog(null,lines[2], null, JOptionPane.INFORMATION_MESSAGE);
 				System.out.println("Błędne dane logowania");
 			}else {
@@ -198,6 +198,8 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 				System.out.println("Coś poszło nie tak");
 			}
 		}
+		
+		//REJESTRACJA
 		if(action.equals("sign")) {
 			if(newPassword.equals(newPassword2)) {
 				message = "~$instr&\r\n" + 
@@ -212,8 +214,10 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 				}
 				
 				String [] lines = response.split(System.getProperty("line.separator"));
-				if(lines[1]=="~$accpass&") {
-					Client.friendsMap.clear();
+				if(lines[0].equals("~$instr&") && lines[1].equals("~$accpass&")) {
+					
+					Client.updateFriendsMap(lines);// w przypadku rejestracji tylko sam on jest swoim znajomym
+										
 					//ustawia widoczność okienek
 					Client.framesMap.put(Client.loginFrame, false);
 					Client.framesMap.put(Client.mainFrame, true);

@@ -60,23 +60,30 @@ public class Client {
 	}
 
 	public static String communicate (String message) throws Exception{//wysyla i odbiera z serwera
-       String response = "";	 
-       System.out.println("message:" + message);//debugging
+       String response = "";	       
 	   writer.write(message);
 	   writer.flush();
+	   System.out.println("message:" + message);//debugging
 	   
 	   String line = reader.readLine();
-	   while (line != "~$end&"){
+	   while (!line.equals("~$end&")){
 		   response += line;
 		   response += "\r\n";
 	       //System.out.println("response:" + response); //debugging
 	       line = reader.readLine();
 	   }
-	   System.out.println("response:" + response); //debugging
+	   //System.out.println("response:" + response); //debugging
 	   return response;
    }
 	
-	
+	public static void updateFriendsMap(String [] lines) {
+		Client.friendsMap.clear();
+		for(int i = 2;i < lines.length ;i++) {
+			
+			Client.friendsMap.put(lines[i], new Boolean(lines[i+1]));//umieszcza otrzymaną listę z serwera w liście w pamięci
+								//nazwa uzytkownika //true lub false					
+		}		
+	}
 	
 	//chyba działa
 	public static void setVisibleFrames() {//ustawia widocznosc okienek - wywolywana przez action listenery
