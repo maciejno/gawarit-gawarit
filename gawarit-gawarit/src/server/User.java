@@ -18,10 +18,6 @@ public class User {
 
     boolean login(String login, String pass) {
 
-        if(false) {
-         System.out.println("ni ma tego pliku???");
-            return false;
-        }
         username=login;
         InputStreamReader streamReader = null;
         BufferedReader bufferedReader = null;
@@ -41,6 +37,7 @@ public class User {
             }
         }catch (Exception e) {
             System.err.println("Blad przy otwarciu pliku");
+            return false;
         }
         try {
             streamReader.close();
@@ -52,7 +49,7 @@ public class User {
     }
 
     void register(String login, String pass) {
-
+        
     }
 
 
