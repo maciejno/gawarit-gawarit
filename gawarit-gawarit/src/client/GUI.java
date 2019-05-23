@@ -88,7 +88,7 @@ public class GUI extends JPanel implements ActionListener{
 		
 		//WYSYLANIE
 		if(action.equals("send")) {
-			
+			//chooseFriend.getSelectedItem().toString();
 			
 			
 		//WYLOGOWYWANIE
@@ -107,6 +107,12 @@ public class GUI extends JPanel implements ActionListener{
 				Client.framesMap.put(Client.loginFrame, true);
 				Client.framesMap.put(Client.mainFrame, false);
 				Client.setVisibleFrames();
+				try {
+					Client.socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				Client.initialize();
 			}else {
 				JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
 				System.out.println("Coś poszło nie tak");

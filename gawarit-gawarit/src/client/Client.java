@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ public class Client {
 	static Map<String, Boolean> friendsMap = new HashMap<String, Boolean>();
 	static LoginFrame loginFrame;
 	static MainFrame mainFrame;
+	static ArrayList<JFrame> messageFrames;
 	
 	public static Socket socket;
 	static BufferedWriter writer;
@@ -46,7 +48,7 @@ public class Client {
 		});				
 	}
 	
-	private static void initialize() {
+	public static void initialize() {
 		try {
 			//socket = new Socket(InetAddress.getLocalHost().getHostName(), 44242);
 			socket = new Socket("10.68.16.164", 44242);
@@ -54,7 +56,7 @@ public class Client {
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));		
 		} catch (IOException e) {
 			e.printStackTrace();
-		} //jest local host, ale trzeba b�dzie zmieni� na jaki� nielokalny
+		} //jest localhost, ale trzeba bedzie zmienic na jakis inny
 		
 		framesMap.put(loginFrame, true);
 		framesMap.put(mainFrame, false);
