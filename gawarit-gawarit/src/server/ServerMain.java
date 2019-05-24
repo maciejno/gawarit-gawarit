@@ -42,12 +42,13 @@ public class ServerMain {
 
         ServerSocket serverSocket = new ServerSocket(44242);
         Monitor("Uruchomiono Serwer.");
+        StatusUpdate();
         Monitor("IP: " + java.net.InetAddress.getLocalHost().getHostAddress().toString());
         Monitor("Port:  " + serverSocket.getLocalPort());
         Monitor("");
         Integer tempUsername=0;
         while (true) {
-            Monitor(connections.size() + " podlaczonych uzytkownikow.");
+            StatusUpdate();
             Socket socket = serverSocket.accept();
             Monitor("Nowa proba polaczenia...");
             Connection connect = new Connection(tempUsername, socket);
@@ -61,6 +62,10 @@ public class ServerMain {
     static void Monitor(String msg){
         textArea.append(msg);
         textArea.append("\n");
+    }
+
+    static void StatusUpdate() {
+        numberArea.setText("podlaczonych uzytkownikow: " + connections.size());
     }
 
 }
