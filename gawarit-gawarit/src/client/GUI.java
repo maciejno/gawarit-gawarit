@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
@@ -24,6 +25,7 @@ public class GUI extends JPanel implements ActionListener{
     MainFrame mainFrame;
     JPanel panelCenter, panelUp;
         
+    JButton sendB;
     JButton logoutB;//wylogowanie-przycisk
     JButton dodajB;
     JButton usunB;
@@ -43,6 +45,7 @@ public class GUI extends JPanel implements ActionListener{
        
         panelCenter = new JPanel();
         panelUp = new JPanel();
+        sendB = new JButton("Napisz wiadomość");
         logoutB = new JButton("Wyloguj");
         dodajB = new JButton("+ znajomego");
         usunB = new JButton("- znajomego");
@@ -53,9 +56,10 @@ public class GUI extends JPanel implements ActionListener{
 
         gui.setLayout(new BorderLayout());
         panelCenter.setLayout(new GridLayout(2,2));
-        panelUp.setLayout(new GridLayout(2,1));       
+        panelUp.setLayout(new GridLayout(3,1));       
         panelUp.add(friendLabel);
         panelUp.add(chooseFriend);
+        panelUp.add(sendB);
         
         panelCenter.add(dodajB);
         panelCenter.add(dodajField);
@@ -64,27 +68,36 @@ public class GUI extends JPanel implements ActionListener{
 
         gui.add(panelUp,BorderLayout.NORTH);
         gui.add(logoutB, BorderLayout.SOUTH);
-        gui.add(panelCenter, BorderLayout.CENTER);        
+        gui.add(panelCenter, BorderLayout.CENTER); 
+        
+        //action listenery dodaje
+        sendB.addActionListener(this);
+        sendB.setActionCommand("send");
+        logoutB.addActionListener(this);
+        logoutB.setActionCommand("logout");
+        dodajB.addActionListener(this);
+        dodajB.setActionCommand("add");
+        usunB.addActionListener(this);
+        usunB.setActionCommand("delete");
     }
     
     public JComboBox<String> getChooseFriend(){return chooseFriend;}
-    
-    public static void updateFriendsBox() {//odświeża combo box ze znajomymi
-    	Client.mainFrame.getGui().getChooseFriend().removeAllItems();
-    	String status = null;
-    	String item = null;
-    	for(String key : Client.friendsMap.keySet()) {
-    		if(Client.friendsMap.get(key)) status = " on";
-    		else status = " off";
-    		item = key + status;
-    		Client.mainFrame.getGui().getChooseFriend().addItem(item);
-    	}
-    }
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		String action = ae.getActionCommand();
-		if(action.equals("logout")) {
+		
+		//WYSYLANIE
+		if(action.equals("send")) {
+			String [] words = chooseFriend.getSelectedItem().toString().split(System.getProperty("line.separator"));
+			try {
+				MessageFrame frame = new MessageFrame(words [0]);//username w konstruktorze przekazuje
+			} catch (LineUnavailableException | IOException e) {
+				e.printStackTrace();
+			}
+			
+		//WYLOGOWYWANIE
+		}else if(action.equals("logout")) {
 			message = "~$instr&\r\n" + 
 					"~$logout&\r\n" + 					
 					"~$end&\r\n";
@@ -99,10 +112,18 @@ public class GUI extends JPanel implements ActionListener{
 				Client.framesMap.put(Client.loginFrame, true);
 				Client.framesMap.put(Client.mainFrame, false);
 				Client.setVisibleFrames();
+				try {
+					Client.socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				Client.initialize();
 			}else {
 				JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
 				System.out.println("Coś poszło nie tak");
 			}
+		
+		//DODAWANIE ZNAJOMEGO
 		}else if(action.equals("add")) {
 			newFriend = dodajField.getText();
 			message = "~$instr&\r\n" + 
@@ -116,19 +137,34 @@ public class GUI extends JPanel implements ActionListener{
 			}			
 			String [] lines = response.split(System.getProperty("line.separator"));
 			if(lines[0].equals("~$instr&") && lines[1].equals("~$rejectedinv&")) {
-				//
-				//
-				//
+				JOptionPane.showMessageDialog(null, "Nie udało się dodać znajomego. "
+						+ "Upewnij się, że istnieje i chce z tobą rozmawiać :)", null, JOptionPane.INFORMATION_MESSAGE);
 			}else if(lines[0].equals("~$instr&") && lines[1].equals("~$acceptedinv&")){
-				//
-				//
-				//
+				Client.friendsMap.put(lines[2], new Boolean("true")); //dodaje nowego znajomego do mapy
+				Client.updateFriendsBox();
 			}else {
 				JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
 				System.out.println("Coś poszło nie tak");
 			}	
+		//USUWANIE ZNAJOMEGO
 		}else if(action.equals("delete")) {
-			
+			badGuy = usunField.getText();
+			message = "~$instr&\r\n" + 
+					"~$delfriend&\r\n" + 
+					badGuy + 
+					"~$end&\r\n";
+			try {
+				response = Client.communicate(message);//wysyla i odbiera
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+			String [] lines = response.split(System.getProperty("line.separator"));
+			if(lines[0].equals("~$instr&") && lines[1].equals("~$friends&")) {
+				Client.updateFriendsMap(lines); //po usunieciu updateuje mape znajomych
+			}else {
+				JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
+				System.out.println("Coś poszło nie tak");
+			}	
 		}
 	}
 }

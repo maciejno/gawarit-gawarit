@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ public class Client {
 	static Map<String, Boolean> friendsMap = new HashMap<String, Boolean>();
 	static LoginFrame loginFrame;
 	static MainFrame mainFrame;
+	static ArrayList<JFrame> messageFrames;
 	
 	public static Socket socket;
 	static BufferedWriter writer;
@@ -46,14 +48,15 @@ public class Client {
 		});				
 	}
 	
-	private static void initialize() {
+	public static void initialize() {
 		try {
-			socket = new Socket(InetAddress.getLocalHost().getHostName(), 44242);
+			//socket = new Socket(InetAddress.getLocalHost().getHostName(), 44242);
+			socket = new Socket("10.68.16.164", 44242);
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));		
 		} catch (IOException e) {
 			e.printStackTrace();
-		} //jest local host, ale trzeba b�dzie zmieni� na jaki� nielokalny
+		} //jest localhost, ale trzeba bedzie zmienic na jakis inny
 		
 		framesMap.put(loginFrame, true);
 		framesMap.put(mainFrame, false);
@@ -72,9 +75,21 @@ public class Client {
 	       //System.out.println("response:" + response); //debugging
 	       line = reader.readLine();
 	   }
-	   //System.out.println("response:" + response); //debugging
+	   System.out.println("response:" + response); //debugging
 	   return response;
    }
+	
+	public static void updateFriendsBox() {//odświeża combo box ze znajomymi
+    	mainFrame.getGui().getChooseFriend().removeAllItems();
+    	String status = null;
+    	String item = null;
+    	for(String key : Client.friendsMap.keySet()) {
+    		if(Client.friendsMap.get(key)) status = " on";
+    		else status = " off";
+    		item = key + status;
+    		mainFrame.getGui().getChooseFriend().addItem(item);
+    	}
+    }
 	
 	public static void updateFriendsMap(String [] lines) {
 		Client.friendsMap.clear();
@@ -82,7 +97,8 @@ public class Client {
 			
 			Client.friendsMap.put(lines[i], new Boolean(lines[i+1]));//umieszcza otrzymaną listę z serwera w liście w pamięci
 								//nazwa uzytkownika //true lub false					
-		}		
+		}
+		Client.updateFriendsBox();//jak zrobi update listy, to potem uaktualnia combo box ze znajomymi
 	}
 	
 	//chyba działa
