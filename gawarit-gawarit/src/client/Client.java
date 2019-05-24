@@ -22,7 +22,7 @@ public class Client {
 	static Map<String, Boolean> friendsMap = new HashMap<String, Boolean>();
 	static LoginFrame loginFrame;
 	static MainFrame mainFrame;
-	static ArrayList<JFrame> messageFrames;
+	static Map<String, JFrame> messageFrames = new HashMap<String, JFrame>();
 	
 	public static Socket socket;
 	static BufferedWriter writer;
@@ -50,8 +50,8 @@ public class Client {
 	
 	public static void initialize() {
 		try {
-			//socket = new Socket(InetAddress.getLocalHost().getHostName(), 44242);
-			socket = new Socket("10.68.16.164", 44242);
+			socket = new Socket(InetAddress.getLocalHost().getHostName(), 44242);
+			//socket = new Socket("10.68.16.164", 44242);
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));		
 		} catch (IOException e) {
@@ -78,6 +78,12 @@ public class Client {
 	   System.out.println("response:" + response); //debugging
 	   return response;
    }
+	
+	public static void send (String message) throws Exception{//tylko wysyla       
+		   writer.write(message);
+		   writer.flush();
+		   System.out.println("message:" + message);//debugging
+	   }
 	
 	public static void updateFriendsBox() {//odświeża combo box ze znajomymi
     	mainFrame.getGui().getChooseFriend().removeAllItems();

@@ -15,27 +15,30 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-public class MessageFrame extends JFrame{
+public class MessageFrame extends JFrame implements Runnable{
 
 	private static final long serialVersionUID = 1L;
 	MessageFrame frame;
 	JPanel panel;
 	String text = "";
 	GuiMessageFrame gui;
+	String username = null;
 	
 	static JFrame f = new JFrame();//do option pane
 	
-	public MessageFrame(String username) throws LineUnavailableException, IOException{	
-		this.frame = this;
-		this.gui = new GuiMessageFrame(this);
+	public MessageFrame(String username) throws LineUnavailableException, IOException {	
+		this.frame = this;		
+		this.username = username;
+		this.gui = new GuiMessageFrame(this);		
 		this.setSize(360,520);
+		this.setVisible(true);
 		this.setResizable(true);//zeby rozmiar okna byl staly
 		this.setMinimumSize(new Dimension(360,520));//ustawia minimalny rozmiar okna
 		this.setTitle("Gawarit-Gawarit");
 		ImageIcon mainIcon = new ImageIcon(this.getClass().getResource("/logo_mini.png"));
 		this.setIconImage(mainIcon.getImage());
 		
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.add(gui);
 		
 		panel = new JPanel();
@@ -61,6 +64,13 @@ public class MessageFrame extends JFrame{
         }		
 	}
 
+	public String getUsername() {return this.username;}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
 
