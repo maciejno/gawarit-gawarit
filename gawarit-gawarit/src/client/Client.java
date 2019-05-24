@@ -128,8 +128,11 @@ public class Client {
 		String[] envelope =  new String[2];
 		while(true) {
 			try {
-	            String line = reader.readLine();	
+				System.out.println("czekam aż coś przyjdzie");//DEBUGGING
+	            String line = reader.readLine();
+	            System.out.println("czytam");//DEBUGGING
 	            if(line.equals("~$message&")) {
+	            	System.out.println("jakaś wiadomość");//DEBUGGING
 	                username = reader.readLine();                
 	                while(!line.equals("~$end&")) {
 	                	message = message + line + "\r\n";

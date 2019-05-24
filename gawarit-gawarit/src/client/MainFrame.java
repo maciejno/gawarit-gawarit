@@ -121,7 +121,9 @@ public class MainFrame extends JFrame implements Runnable{
 	@Override
 	public void run() {
 		while(true) {
+			System.out.println("zaczyna słuchać");//DEBUGGING
 			envelope = Client.listen();
+			System.out.println("dostałem wiadomość");//DEBUGGING
 			String username = envelope[0];
 			String message = envelope[1];
 			if(Client.messageFrames.get(username)!=null) {//jesli juz jest to okienko

@@ -189,7 +189,9 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 				//ustawia widoczność okienek
 				Client.framesMap.put(Client.loginFrame, false);
 				Client.framesMap.put(Client.mainFrame, true);
-				Client.setVisibleFrames();			
+				Client.setVisibleFrames();
+				Thread fred = new Thread(Client.mainFrame);
+				fred.start();
 			}else if(lines[1].equals("~$rejpass&")) {
 				JOptionPane.showMessageDialog(null,lines[2], null, JOptionPane.INFORMATION_MESSAGE);
 				System.out.println("Błędne dane logowania");
