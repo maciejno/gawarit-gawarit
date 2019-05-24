@@ -6,11 +6,13 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Vector;
+import java.util.HashMap;
+
+
 
 public class ServerMain {
 
-    public static Vector<Connection> connections = new Vector<Connection>();
+    public static HashMap<String, Connection> connections = new HashMap<String, Connection>();
 
     private static JFrame f;
     private static JTextArea textArea;
@@ -39,16 +41,15 @@ public class ServerMain {
         Monitor("IP: " + java.net.InetAddress.getLocalHost().getHostAddress().toString());
         Monitor("Port:  " + serverSocket.getLocalPort());
         Monitor("");
-        int i=0;
+        Integer tempUsername=0;
         while (true) {
+            Monitor(connections.size() + " podlaczonych uzytkownikow.");
             Socket socket = serverSocket.accept();
-            ServerMain.Monitor("Nowa proba polaczenia...");
-            //BufferedReader reciever= new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            //BufferedWriter transmitter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            Connection connect = new Connection(i, socket, connections);
+            Monitor("Nowa proba polaczenia...");
+            Connection connect = new Connection(tempUsername, socket);
             Thread thread = new Thread(connect);
-            connections.add(i, connect);
-            i++;
+            connections.put(tempUsername.toString(), connect);
+            tempUsername++;
             thread.start();
         }
     }
