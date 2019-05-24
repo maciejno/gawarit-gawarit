@@ -16,6 +16,7 @@ public class ServerMain {
 
     private static JFrame f;
     private static JTextArea textArea;
+    private static JTextArea numberArea;
     private static JScrollPane scrollPane;
 
 
@@ -28,12 +29,15 @@ public class ServerMain {
         f.setIconImage(mainIcon.getImage());
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         textArea = new JTextArea();
+        numberArea = new JTextArea();
         scrollPane = new JScrollPane(textArea);
         textArea.setEditable(false);
         textArea.setBackground(Color.BLACK);
         textArea.setForeground(Color.WHITE);
         textArea.setFont(textArea.getFont().deriveFont(16f));
-        f.add(scrollPane);
+        numberArea.setEditable(false);
+        f.add(scrollPane, BorderLayout.CENTER);
+        f.add(numberArea, BorderLayout.PAGE_END);
         f.setVisible(true);
 
         ServerSocket serverSocket = new ServerSocket(44242);

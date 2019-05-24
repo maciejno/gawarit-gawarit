@@ -65,6 +65,14 @@ public class Connection implements Runnable {
                 else{
                     rejpass();
                     ServerMain.Monitor("Nie udalo sie zalogowac uzytkownika " + login + " (bledny login/haslo)");
+                    ServerMain.connections.remove(tempUsername);
+                    try {
+                        socket.close();
+                    } catch (IOException ex) {
+                       ex.printStackTrace();
+                       ServerMain.Monitor("Wysyapil problem z zerwaniem polaczenia. (rejpass)");
+                    }
+
                }
             }
             if(line.equals("~$register&")) {
@@ -79,10 +87,10 @@ public class Connection implements Runnable {
                 socket.close();
             } catch (IOException ex) {
                 ex.printStackTrace();
-                ServerMain.Monitor("Wysyapil problem z zerwaniem polaczenia.");
+                ServerMain.Monitor("Wysyapil problem z zerwaniem polaczenia. (login procedure)");
             }
             ServerMain.connections.remove(user.username);
-            ServerMain.Monitor("Wysyapil problem z polaczeniem.");
+            ServerMain.Monitor("Wysyapil problem z polaczeniem. (login procedure)");
         }
 
 
@@ -90,7 +98,6 @@ public class Connection implements Runnable {
         while(true) {
             try {
                 line = reciever.readLine();
-
 
                 if(line.equals("~$instr&")) {
                     line = reciever.readLine();
@@ -117,15 +124,22 @@ public class Connection implements Runnable {
                     }
                 }
 
+                if(line.equals("~$message&")) {
+                    String recipant = reciever.readLine();
+                    String content = reciever.readLine();
+                    if (reciever.readLine().equals("~$end&"))
+                        sendMessage(recipant,content);
+                }
+
 
             } catch (IOException e) {
                 e.printStackTrace();
-                ServerMain.Monitor("Zerwano polaczenie.");
+                ServerMain.Monitor("Uzytkownik " + user.username + " zerwal polaczenie.");
                 try {
                     socket.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
-                    ServerMain.Monitor("Problem z zerwaniem polaczenia. :O");
+                    ServerMain.Monitor("Problem z zerwaniem polaczenia. (" + user.username + ")");
                 }
                 ServerMain.connections.remove(user.username);
                 break;
@@ -147,7 +161,7 @@ public class Connection implements Runnable {
             transmitter.flush();
         } catch (IOException e) {
             e.printStackTrace();
-            ServerMain.Monitor("Problem z wyslaniem.");
+            ServerMain.Monitor("Problem z wyslaniem. (rejpass)");
             return;
         }
     }
@@ -174,12 +188,43 @@ public class Connection implements Runnable {
             transmitter.flush();
         } catch (IOException e) {
         e.printStackTrace();
-        ServerMain.Monitor("Problem z wyslaniem.");
+        ServerMain.Monitor("Problem z wyslaniem. (accpass)");
         return;
         }
     }
 
     private void register() {
+
+    }
+
+    void sendMessage(String target, String message) {
+        try {
+            if (ServerMain.connections.containsKey(target)) {
+                ServerMain.connections.get(target).transmitter.write("~$message&");
+                ServerMain.connections.get(target).transmitter.write("\n");
+                ServerMain.connections.get(target).transmitter.write(user.username);
+                ServerMain.connections.get(target).transmitter.write("\n");
+                ServerMain.connections.get(target).transmitter.write(message);
+                ServerMain.connections.get(target).transmitter.write("\n");
+                ServerMain.connections.get(target).transmitter.write("~$end&");
+                ServerMain.connections.get(target).transmitter.flush();
+                ServerMain.Monitor("Wiadomosc: " + user.username + " > " + target);
+            } else {
+                transmitter.write("~$message&");
+                transmitter.write("\n");
+                transmitter.write(target);
+                transmitter.write("\n");
+                transmitter.write("Uzytkownik " + target + " jest niezalogowany.");
+                transmitter.write("\n");
+                transmitter.write("~$end&");
+                transmitter.write("\n");
+                transmitter.flush();
+                ServerMain.Monitor("Wiadomosc: " + user.username + " ><< " + target);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            ServerMain.Monitor("Problem z wyslaniem wiadomosci. (" + user.username + " > " + target);
+        }
 
     }
 
