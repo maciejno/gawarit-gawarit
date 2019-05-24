@@ -23,7 +23,7 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
     MessageFrame frame;
     
     String nick = null;
-    String history = "Historia konwersacji";
+    String history = "";
     String message = "здравствуйте!";
     JButton sendButton;
     JLabel  nickLabel;
@@ -74,4 +74,6 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
 			}
 		}
 	}
+	
+	public JEditorPane getHistoryPane() {return historyPane;}
 }

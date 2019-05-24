@@ -23,7 +23,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements Runnable{
 
 	private static final long serialVersionUID = 1L;
 	GUI userInterface;
@@ -36,6 +36,7 @@ public class MainFrame extends JFrame {
 	JEditorPane textArea;
 	JPanel panel;
 	String text = "";
+	String [] envelope = new String [2];
 	
 	static JFrame f = new JFrame();//do option pane
 	
@@ -55,7 +56,7 @@ public class MainFrame extends JFrame {
 		this.add(userInterface);
 
 		menuBar = new JMenuBar();
-		menu = new JMenu("Plik");
+		menu = new JMenu("Zakończ");
 		end = new JMenuItem("Koniec programu");		
 		
 		this.setJMenuBar(menuBar);
@@ -116,6 +117,30 @@ public class MainFrame extends JFrame {
 			}
 		return readText;
 	}			
+	
+	@Override
+	public void run() {
+		while(true) {
+			envelope = Client.listen();
+			String username = envelope[0];
+			String message = envelope[1];
+			if(Client.messageFrames.get(username)!=null) {//jesli juz jest to okienko
+				String newHistory = Client.messageFrames.get(username).getGui().getHistoryPane().getText() + message;//dopisuje do obecnego tekstu nową wiadomość
+				Client.messageFrames.get(username).getGui().getHistoryPane().setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
+			}else {//jesli jeszcze nie ma okienka to dodaje a dalej to samo
+				try {
+					Client.messageFrames.put(username, new MessageFrame(username));
+					String newHistory = Client.messageFrames.get(username).getGui().getHistoryPane().getText() + message;//dopisuje do obecnego tekstu nową wiadomość
+					Client.messageFrames.get(username).getGui().getHistoryPane().setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
+				} catch (LineUnavailableException | IOException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+				
+	}
+	
 	
 	public JMenu getMenu() {return menu;};
 	public JMenuItem getEnd() {return end;};

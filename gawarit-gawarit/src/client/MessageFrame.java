@@ -15,7 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-public class MessageFrame extends JFrame implements Runnable{
+import server.ServerMain;
+
+public class MessageFrame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	MessageFrame frame;
@@ -65,12 +67,8 @@ public class MessageFrame extends JFrame implements Runnable{
 	}
 
 	public String getUsername() {return this.username;}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
+	public GuiMessageFrame getGui() {return this.gui;}
+	
 	
 }
 

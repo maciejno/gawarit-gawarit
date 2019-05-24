@@ -22,7 +22,7 @@ public class Client {
 	static Map<String, Boolean> friendsMap = new HashMap<String, Boolean>();
 	static LoginFrame loginFrame;
 	static MainFrame mainFrame;
-	static Map<String, JFrame> messageFrames = new HashMap<String, JFrame>();
+	static Map<String, MessageFrame> messageFrames = new HashMap<String, MessageFrame>();
 	
 	public static Socket socket;
 	static BufferedWriter writer;
@@ -50,8 +50,8 @@ public class Client {
 	
 	public static void initialize() {
 		try {
-			socket = new Socket(InetAddress.getLocalHost().getHostName(), 44242);
-			//socket = new Socket("10.68.16.164", 44242);
+			//socket = new Socket(InetAddress.getLocalHost().getHostName(), 44242);
+			socket = new Socket("10.68.16.164", 44242);
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));		
 		} catch (IOException e) {
@@ -113,5 +113,37 @@ public class Client {
 			entry.getKey().setVisible(entry.getValue());//ustawia wszystkim okienkom taką widoczność jaką mają
 		}
 	}
-	
+	public static void restartSocket () {//zamyka socketa i otwiera nowego
+		try {
+			Client.socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Client.initialize();
+	}
+
+	public static String [] listen() {//zwraca to co wysłuchał - nickname od którego idzie + wiadomość
+		String username = null;
+		String message = null;
+		String[] envelope =  new String[2];
+		while(true) {
+			try {
+	            String line = reader.readLine();	
+	            if(line.equals("~$message&")) {
+	                username = reader.readLine();                
+	                while(!line.equals("~$end&")) {
+	                	message = message + line + "\r\n";
+	                	line = reader.readLine();
+	                } 
+	             envelope [0] = username;
+	             envelope [1] = message;   
+	             return envelope;
+	            }	         
+	        }catch (IOException e) {
+	            e.printStackTrace();
+	          return null;
+	        }
+	            
+	    }
+	}
 }
