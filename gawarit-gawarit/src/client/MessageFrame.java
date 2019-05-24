@@ -25,7 +25,7 @@ public class MessageFrame extends JFrame{
 	
 	static JFrame f = new JFrame();//do option pane
 	
-	public MessageFrame() throws LineUnavailableException, IOException{	
+	public MessageFrame(String username) throws LineUnavailableException, IOException{	
 		this.frame = this;
 		this.gui = new GuiMessageFrame(this);
 		this.setSize(360,520);
@@ -61,49 +61,7 @@ public class MessageFrame extends JFrame{
         }		
 	}
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				JFrame frame = null;
-				
-				try {
-					frame = new MessageFrame();
-				} catch (LineUnavailableException | IOException e) {					
-					e.printStackTrace();
-				}
-				frame.setVisible(true);
-			}
-		});				
-	}
-	protected String readTextFile(String fileName) {
-		InputStreamReader streamReader = null;
-		BufferedReader bufferedReader = null;
-		String readText = "";
-		try {							
-			InputStream inputStream = getClass().getResourceAsStream("/" + fileName + ".txt");
-			streamReader = new InputStreamReader(inputStream); // Otwieramy readera
-			bufferedReader = new BufferedReader(streamReader); // Buforujemy readera
-			String line;//na linie tekstu
-			line = bufferedReader.readLine();//wczytanie linii tekstu do bufora
-
-			while (line != null) { // readLine() zwraca null jesli plik sie skonczyl
-				//System.out.println(line);	 			
-				readText += line + "\n";
-				line = bufferedReader.readLine();
-			}
-		}catch (Exception e) {	
-			System.err.println("Blad przy otwarciu");
-			readText = "";				
-		}
-		try {				
-			streamReader.close();
-			bufferedReader.close();
-		} catch (IOException e) {
-			System.err.println("BLAD PRZY ZAMYKANIU PLIKU!");
-			System.exit(3);
-			}
-		return readText;
-	}			
+	
 }
 
 

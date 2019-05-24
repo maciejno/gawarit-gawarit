@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
@@ -88,8 +89,12 @@ public class GUI extends JPanel implements ActionListener{
 		
 		//WYSYLANIE
 		if(action.equals("send")) {
-			//chooseFriend.getSelectedItem().toString();
-			
+			String [] words = chooseFriend.getSelectedItem().toString().split(System.getProperty("line.separator"));
+			try {
+				MessageFrame frame = new MessageFrame(words [0]);//username w konstruktorze przekazuje
+			} catch (LineUnavailableException | IOException e) {
+				e.printStackTrace();
+			}
 			
 		//WYLOGOWYWANIE
 		}else if(action.equals("logout")) {
