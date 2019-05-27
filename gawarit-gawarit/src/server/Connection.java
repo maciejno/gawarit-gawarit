@@ -229,7 +229,7 @@ public class Connection implements Runnable {
                 ServerMain.connections.get(target).transmitter.write("\n");
                 ServerMain.connections.get(target).transmitter.write(message);
                 ServerMain.connections.get(target).transmitter.write("\n");
-                ServerMain.connections.get(target).transmitter.write("~$end&");
+                ServerMain.connections.get(target).transmitter.write("~$end&\n");
                 ServerMain.connections.get(target).transmitter.flush();
                 ServerMain.Monitor("Wiadomosc: " + user.username + " > " + target);
             } else { //gdy adresat nie jest zalogowany

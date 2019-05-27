@@ -37,15 +37,17 @@ public class MainFrame extends JFrame implements Runnable{
 	JPanel panel;
 	String text = "";
 	String [] envelope = new String [2];
+	String myName = null;
 	
 	static JFrame f = new JFrame();//do option pane
 	
-	public MainFrame() throws LineUnavailableException, IOException{	
+	public MainFrame(String myName) throws LineUnavailableException, IOException{	
 		this.mainFrame = this;
+		this.myName = myName;
 		this.setSize(300,250);
 		this.setResizable(true);//zeby rozmiar okna byl staly
 		this.setMinimumSize(new Dimension(300,250));//ustawia minimalny rozmiar okna
-		this.setTitle("Gawarit-Gawarit");
+		this.setTitle(myName + "-zalogowano");
 		ImageIcon mainIcon = new ImageIcon(this.getClass().getResource("/logo_mini.png"));
 		this.setIconImage(mainIcon.getImage());
 		
@@ -127,23 +129,22 @@ public class MainFrame extends JFrame implements Runnable{
 			String username = envelope[0];
 			String message = envelope[1];
 			if(Client.messageFrames.get(username)!=null) {//jesli juz jest to okienko
-				String newHistory = Client.messageFrames.get(username).getGui().getHistoryPane().getText() + message;//dopisuje do obecnego tekstu nową wiadomość
+				System.out.println("wypiszę:" + Client.messageFrames.get(username).getGui().getHistoryPane().getText());
+				String newHistory = Client.messageFrames.get(username).getGui().getHistoryPane().getText() + username + ":\r\n" + message;//dopisuje do obecnego tekstu nową wiadomość
 				Client.messageFrames.get(username).getGui().getHistoryPane().setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
 			}else {//jesli jeszcze nie ma okienka to dodaje a dalej to samo
 				try {
-					Client.messageFrames.put(username, new MessageFrame(username));
-					String newHistory = Client.messageFrames.get(username).getGui().getHistoryPane().getText() + message;//dopisuje do obecnego tekstu nową wiadomość
+					Client.messageFrames.put(username, new MessageFrame(username,myName));
+					String newHistory = username + ":\r\n" + message;//dopisuje do obecnego tekstu nową wiadomość
 					Client.messageFrames.get(username).getGui().getHistoryPane().setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
 				} catch (LineUnavailableException | IOException e) {
 					e.printStackTrace();
 				}
-				
 			}
-		}
-				
+		}				
 	}
-	
-	
+		
+	public String getMyName() {return myName;}
 	public JMenu getMenu() {return menu;};
 	public JMenuItem getEnd() {return end;};
 	public GUI getGui() {return userInterface;}
