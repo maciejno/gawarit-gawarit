@@ -12,7 +12,7 @@ public class Connection implements Runnable {
     public User user = new User();
     String line = null;
 
-    BufferedReader reciever;
+    BufferedReader receiver;
     BufferedWriter transmitter;
     Socket socket;
     final String tempUsername;
@@ -21,7 +21,7 @@ public class Connection implements Runnable {
         socket = sckt;
         tempUsername = index.toString();
         try {
-            reciever = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            receiver = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             transmitter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -29,94 +29,89 @@ public class Connection implements Runnable {
     }
 
     @Override
-    public void run() { //wunkcja run, odpowiadająca za obsługę połączenia z pojedynczym użytkownikiem
-        ServerMain.StatusUpdate(); //aktualizacja terminala
-        //procedura logowania
+    public void run() {//funkcja run, odpowiadająca za obsługę połączenia z pojedynczym użytkownikiem
+
         ServerMain.Monitor("Polaczenie nawiazane...");
-        try {
-            if(!reciever.readLine().equals("~$instr&")){ //procedura logowania
-                ServerMain.Monitor("Niepoprawny protokol. Koniec polaczenia. (~$instr& login)");
-                socket.close();
-                ServerMain.connections.remove(tempUsername); //usuwa klasę connection użytkownika z listy aktywnych połączeń
-                ServerMain.StatusUpdate();
-                return;
-            }
-            line = reciever.readLine();
-            if((!line.equals("~$login&"))&&(!line.equals("~$register&"))) { //spaawdzanie poprawności protokołu
-                ServerMain.Monitor("Niepoprawny protokol. Koniec polaczenia. (~$login& / ~$register&)");
-                socket.close();
-                ServerMain.connections.remove(tempUsername);
-                ServerMain.StatusUpdate();
-                return;
-            }
-            ServerMain.Monitor("Zapytanie poprawne...");
-            String login = reciever.readLine(); //odczytanie loginu i hasła wysyłanego przez usera
-            String pass = reciever.readLine();
-            if(!reciever.readLine().equals("~$end&")) { //dalsze sprawdzanie poprawności protokołu
-                ServerMain.Monitor("Niepoprawny protokol. Koniec polaczenia. (endless)");
-                socket.close();
-                ServerMain.connections.remove(tempUsername);
-                ServerMain.StatusUpdate();
-                return;
-            }
-            ServerMain.Monitor("Nowy uzytkownik identyfikuje sie jako: " + login);
-            //właściwe logowanie na serwer
-            if(line.equals("~$login&")) {
-               if(user.login(login,pass)) { //user.login zwraca true, jeśli użytkownik jest zarejestrowany
-                   accpass();
-                   ServerMain.Monitor("Uzytkownik " + user.username + " zalogowal sie na serwer.");
-               }
-                else{
-                    rejpass(); //gdy nie ma "konta" użytkownika
-                    ServerMain.Monitor("Nie udalo sie zalogowac uzytkownika " + login + " (bledny login/haslo)");
-                    ServerMain.connections.remove(tempUsername);
-                    try {
-                        socket.close();
-                    } catch (IOException ex) {
-                       ex.printStackTrace();
-                       ServerMain.Monitor("Wysyapil problem z zerwaniem polaczenia. (rejpass)");
+
+        String login;
+        String pass;
+
+
+        while(true){ //procedura logowania/rejestracji
+            ServerMain.StatusUpdate(); //aktualizacja terminala
+
+            try {
+                line = receiver.readLine();
+
+                if(line.equals("~$instr&")) {
+
+                    line = receiver.readLine();
+
+                    if (line.equals("~$login&")) {
+                        login = receiver.readLine();
+                        pass = receiver.readLine();
+                        if(!receiver.readLine().equals("~$end&"))
+                            continue;
+                        ServerMain.Monitor("Uzytkownik identyfikuje sie jako: " + login);
+                        if (user.login(login, pass)) { //user.login zwraca true, jeśli użytkownik jest zarejestrowany
+                            accpass();
+                            ServerMain.Monitor("Uzytkownik " + user.username + " zalogowal sie na serwer.");
+                            break;
+                        } else {
+                            rejpass(); //gdy nie ma "konta" użytkownika
+                            ServerMain.Monitor("Nie udalo sie zalogowac uzytkownika " + login + " (bledny login/haslo)");
+                            ServerMain.connections.remove(tempUsername);
+                            try {
+                                socket.close();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                                ServerMain.Monitor("Wysyapil problem z zerwaniem polaczenia. (login procedure)");
+                            }
+                            return;
+                        }
                     }
 
-               }
-            }
-            //rejestracja
-            if(line.equals("~$register&")) {
-                user.register(login, pass);
-                ServerMain.Monitor("Zarejestrowano nowego uzytkownika " + user);
+                    if (line.equals("~$register&")) {
+                        login = receiver.readLine(); //odczytanie loginu i hasła wysyłanego przez usera
+                        pass = receiver.readLine();
+                        user.register(login, pass);
+                        ServerMain.Monitor("rejestracja?!");
+                        break;
+                    }
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                if(ServerMain.connections.containsKey(tempUsername))  //jeśli user jest dopiero świeżym wątkiem
+                    ServerMain.connections.remove(tempUsername);
+                if(ServerMain.connections.containsKey(user.username)) //jeśli user już się zalogował
+                    ServerMain.connections.remove(user.username);
+                ServerMain.StatusUpdate();
+                ServerMain.Monitor("Wysyapil problem z polaczeniem. (login procedure)");
+                try {
+                    socket.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    ServerMain.Monitor("Wysyapil problem z zerwaniem polaczenia. (login procedure)");
+                }
+                return;
             }
 
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            if(ServerMain.connections.containsKey(tempUsername))
-                ServerMain.connections.remove(tempUsername);
-            if(ServerMain.connections.containsKey(user.username))
-                ServerMain.connections.remove(user.username);
-            ServerMain.StatusUpdate();
-            ServerMain.Monitor("Wysyapil problem z polaczeniem. (login procedure)");
-            try {
-                socket.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                ServerMain.Monitor("Wysyapil problem z zerwanie polaczenia. (login procedure)");
-            }
-            return;
         }
-
 
 
         while(true) { //główna pętla obsługująca danego użytkownika
             ServerMain.StatusUpdate();
             try {
-                line = reciever.readLine();
+                line = receiver.readLine();
 
                 if(line.equals("~$instr&")) {
-                    line = reciever.readLine();
+                    line = receiver.readLine();
 
 
 
                     if(line.equals("~$logout&")) { //procedura wylogowywania
-                        if (reciever.readLine().equals("~$end&")) {
+                        if (receiver.readLine().equals("~$end&")) {
                             try {
                                 transmitter.write("~$instr&");
                                 transmitter.write("\n");
@@ -138,12 +133,12 @@ public class Connection implements Runnable {
 
                 if(line.equals("~$message&")) { //prcedura wysyłania wiadomości
                     System.out.println("Uzytkownik " + user.username + " probuje wyslac wiadomosc...");//debugging
-                    String recipant = reciever.readLine();
+                    String recipant = receiver.readLine();
                     System.out.println(recipant);
-                    String content = reciever.readLine();
+                    String content = receiver.readLine();
                     System.out.println(content);
-                    //if (reciever.readLine().equals("~$end&")) {
-                    line = reciever.readLine();
+                    //if (receiver.readLine().equals("~$end&")) {
+                    line = receiver.readLine();
                     System.out.println(line); //więcej debuggingu
                     if(line.equals("~$end&")) {
                         System.out.println("Uzytkownik " + user.username + " nadal probuje wyslac wiadomosc...");
