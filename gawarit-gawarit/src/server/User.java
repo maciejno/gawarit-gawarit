@@ -44,6 +44,7 @@ public class User {
             bufferedReader.close();
         } catch (IOException e) {
             System.err.println("Blad przy zamykaniu pliku.");
+            return false;
         }
         return true;
     }

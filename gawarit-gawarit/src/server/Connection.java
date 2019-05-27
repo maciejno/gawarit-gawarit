@@ -53,12 +53,26 @@ public class Connection implements Runnable {
                         if(!receiver.readLine().equals("~$end&"))
                             continue;
                         ServerMain.Monitor("Uzytkownik identyfikuje sie jako: " + login);
+
+                        if(ServerMain.connections.containsKey(login)) { //sprawdza czy uzytkownik jest juz zalogowany
+                            rejpass("Uzytkownik o podanej nazwie jest juz zalogowany"); //gdy uzytkownik jest zalogowany
+                            ServerMain.Monitor("Uzytkownik: " + login + " jest juz zalogowany.");
+                            ServerMain.connections.remove(tempUsername);
+                            try {
+                                socket.close();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                                ServerMain.Monitor("Wysyapil problem z zerwaniem polaczenia. (login procedure)");
+                            }
+                            return;
+                        }
+
                         if (user.login(login, pass)) { //user.login zwraca true, jeśli użytkownik jest zarejestrowany
                             accpass();
                             ServerMain.Monitor("Uzytkownik " + user.username + " zalogowal sie na serwer.");
                             break;
                         } else {
-                            rejpass(); //gdy nie ma "konta" użytkownika
+                            rejpass("Bledny login/haslo"); //gdy nie ma "konta" użytkownika
                             ServerMain.Monitor("Nie udalo sie zalogowac uzytkownika " + login + " (bledny login/haslo)");
                             ServerMain.connections.remove(tempUsername);
                             try {
@@ -74,7 +88,10 @@ public class Connection implements Runnable {
                     if (line.equals("~$register&")) {
                         login = receiver.readLine(); //odczytanie loginu i hasła wysyłanego przez usera
                         pass = receiver.readLine();
+                        ServerMain.Monitor("Nowy uzytkownik: " + login);
                         user.register(login, pass);
+
+
                         ServerMain.Monitor("rejestracja?!");
                         break;
                     }
@@ -112,21 +129,10 @@ public class Connection implements Runnable {
 
                     if(line.equals("~$logout&")) { //procedura wylogowywania
                         if (receiver.readLine().equals("~$end&")) {
-                            try {
-                                transmitter.write("~$instr&");
-                                transmitter.write("\n");
-                                transmitter.write("~$end&");
-                                transmitter.write("\n");
-                                transmitter.flush();
-                                socket.close();
-                                ServerMain.Monitor("Uzytkownik " + user.username + " wylogowal sie.");
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                                ServerMain.Monitor("Problem z zerwaniem polaczenia. (logout)");
-                            }
+                            logout();
                             ServerMain.connections.remove(user.username);
                             ServerMain.StatusUpdate();
-                            break;
+                            return;
                         }
                     }
                 }
@@ -134,14 +140,17 @@ public class Connection implements Runnable {
                 if(line.equals("~$message&")) { //prcedura wysyłania wiadomości
                     System.out.println("Uzytkownik " + user.username + " probuje wyslac wiadomosc...");//debugging
                     String recipant = receiver.readLine();
-                    System.out.println(recipant);
-                    String content = receiver.readLine();
-                    System.out.println(content);
-                    //if (receiver.readLine().equals("~$end&")) {
+                    System.out.println(recipant); //debugging
+                    String content="";
                     line = receiver.readLine();
-                    System.out.println(line); //więcej debuggingu
+                    while(!line.equals("~$end&")) {
+                        content = content + line + "\n";
+                        line = receiver.readLine();
+                    }
+                    System.out.println(recipant);
+                    System.out.println(content);
                     if(line.equals("~$end&")) {
-                        System.out.println("Uzytkownik " + user.username + " nadal probuje wyslac wiadomosc...");
+                        System.out.println("Uzytkownik " + user.username + " zassal wiadomosc..."); //debugging
                         sendMessage(recipant, content);
                     }
                 }
@@ -149,7 +158,7 @@ public class Connection implements Runnable {
 
             } catch (IOException e) { //koniec głównej pętli + zabezpieczenia
                 e.printStackTrace();
-                ServerMain.Monitor("Uzytkownik " + user.username + " - problem z polaczeniem.");
+                ServerMain.Monitor("Uzytkownik " + user.username + " - zerwano polaczenie.");
                 try {
                     socket.close();
                 } catch (IOException ex) {
@@ -164,13 +173,13 @@ public class Connection implements Runnable {
 
     }
 
-    private void rejpass() { //funkcja do odrzuania logowania
+    private void rejpass(String error) { //funkcja do odrzuania logowania
         try {
             transmitter.write("~$instr&");
             transmitter.write("\n");
             transmitter.write("~$rejpass&");
             transmitter.write("\n");
-            transmitter.write("Bledny login/haslo");
+            transmitter.write(error);
             transmitter.write("\n");
             transmitter.write("~$end&");
             transmitter.write("\n");
@@ -243,7 +252,21 @@ public class Connection implements Runnable {
             e.printStackTrace();
             ServerMain.Monitor("Problem z wyslaniem wiadomosci. (" + user.username + " > " + target);
         }
+    }
 
+    void logout() {
+        try {
+            transmitter.write("~$instr&");
+            transmitter.write("\n");
+            transmitter.write("~$end&");
+            transmitter.write("\n");
+            transmitter.flush();
+            socket.close();
+            ServerMain.Monitor("Uzytkownik " + user.username + " wylogowal sie.");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            ServerMain.Monitor("Problem z zerwaniem polaczenia. (" + user.username + " logout)");
+        }
     }
 
 }
