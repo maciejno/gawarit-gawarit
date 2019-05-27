@@ -42,7 +42,7 @@ public class MessageFrame extends JFrame{
 		ImageIcon mainIcon = new ImageIcon(this.getClass().getResource("/logo_mini.png"));
 		this.setIconImage(mainIcon.getImage());
 		
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(HIDE_ON_CLOSE);
 		this.add(gui);
 		
 		panel = new JPanel();

@@ -88,12 +88,17 @@ public class GUI extends JPanel implements ActionListener{
 		String action = ae.getActionCommand();
 		
 		//WYSYLANIE
-		if(action.equals("send")) {
+		if(action.equals("send")) {			
 			String [] words = chooseFriend.getSelectedItem().toString().split(" ");
-			try {
-				Client.messageFrames.put(words[0], new MessageFrame(words [0], mainFrame.getMyName()));//username w konstruktorze przekazuje
-			} catch (LineUnavailableException | IOException e) {
-				e.printStackTrace();
+			String username = words[0];
+			if(Client.messageFrames.get(username) == null){
+				try {
+					Client.messageFrames.put(words[0], new MessageFrame(username, mainFrame.getMyName()));//username w konstruktorze przekazuje
+				} catch (LineUnavailableException | IOException e) {
+					e.printStackTrace();
+				}
+			}else {
+				Client.messageFrames.get(username).setVisible(true);
 			}
 			
 		//WYLOGOWYWANIE
@@ -112,12 +117,7 @@ public class GUI extends JPanel implements ActionListener{
 				Client.framesMap.put(Client.loginFrame, true);
 				Client.framesMap.put(Client.mainFrame, false);
 				Client.setVisibleFrames();
-				try {
-					Client.socket.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				Client.initialize();
+				Client.restartSocket();
 			}else {
 				JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
 				System.out.println("Coś poszło nie tak");

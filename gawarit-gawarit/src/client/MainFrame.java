@@ -89,36 +89,6 @@ public class MainFrame extends JFrame implements Runnable{
             System.err.println("Blad podczas ustawiania LookAndFeel");
         }		
 	}
-
-	protected String readTextFile(String fileName) {
-		InputStreamReader streamReader = null;
-		BufferedReader bufferedReader = null;
-		String readText = "";
-		try {							
-			InputStream inputStream = getClass().getResourceAsStream("/" + fileName + ".txt");
-			streamReader = new InputStreamReader(inputStream); // Otwieramy readera
-			bufferedReader = new BufferedReader(streamReader); // Buforujemy readera
-			String line;//na linie tekstu
-			line = bufferedReader.readLine();//wczytanie linii tekstu do bufora
-
-			while (line != null) { // readLine() zwraca null jesli plik sie skonczyl
-				//System.out.println(line);	 			
-				readText += line + "\n";
-				line = bufferedReader.readLine();
-			}
-		}catch (Exception e) {	
-			System.err.println("Blad przy otwarciu");
-			readText = "";				
-		}
-		try {				
-			streamReader.close();
-			bufferedReader.close();
-		} catch (IOException e) {
-			System.err.println("BLAD PRZY ZAMYKANIU PLIKU!");
-			System.exit(3);
-			}
-		return readText;
-	}			
 	
 	@Override
 	public void run() {
@@ -129,8 +99,12 @@ public class MainFrame extends JFrame implements Runnable{
 			String username = envelope[0];
 			String message = envelope[1];
 			if(Client.messageFrames.get(username)!=null) {//jesli juz jest to okienko
-				System.out.println("wypiszę:" + Client.messageFrames.get(username).getGui().getHistoryPane().getText());
-				String newHistory = Client.messageFrames.get(username).getGui().getHistoryPane().getText() + username + ":\r\n" + message;//dopisuje do obecnego tekstu nową wiadomość
+				//to sprawdza czy jest widoczne, a jak nie to uwidacznia
+				if(!Client.messageFrames.get(username).isVisible()) Client.messageFrames.get(username).setVisible(true);
+
+				//System.out.println("wypiszę:" + Client.messageFrames.get(username).getGui().getHistoryPane().getText());
+				String oldHistory = Client.messageFrames.get(username).getGui().getHistoryPane().getText();				
+				String newHistory = oldHistory + username + ":\r\n" + message;//dopisuje do obecnego tekstu nową wiadomość
 				Client.messageFrames.get(username).getGui().getHistoryPane().setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
 			}else {//jesli jeszcze nie ma okienka to dodaje a dalej to samo
 				try {
