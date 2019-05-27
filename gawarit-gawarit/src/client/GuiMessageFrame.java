@@ -66,7 +66,7 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
 			message = "~$message&\r\n" +
 					nick + "\r\n" +
 					textPane.getText() + "\r\n" +
-					"~$end&";
+					"~$end&\r\n";
 			try {
 				Client.send(message);
 			} catch (Exception e) {
