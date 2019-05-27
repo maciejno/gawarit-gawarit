@@ -103,6 +103,7 @@ public class GUI extends JPanel implements ActionListener{
 			
 		//WYLOGOWYWANIE
 		}else if(action.equals("logout")) {
+			
 			message = "~$instr&\r\n" + 
 					"~$logout&\r\n" + 					
 					"~$end&\r\n";
@@ -122,6 +123,7 @@ public class GUI extends JPanel implements ActionListener{
 				JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
 				System.out.println("Coś poszło nie tak");
 			}
+			
 		
 		//DODAWANIE ZNAJOMEGO
 		}else if(action.equals("add")) {
