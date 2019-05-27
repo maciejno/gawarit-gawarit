@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JFrame;
@@ -24,12 +26,14 @@ public class Client {
 	static MainFrame mainFrame;
 	static Map<String, MessageFrame> messageFrames = new HashMap<String, MessageFrame>();
 	public static String myName = null;
+	public static ExecutorService exec = Executors.newSingleThreadExecutor();
 	
 	public static Socket socket;
 	static BufferedWriter writer;
 	static BufferedReader reader;
 	
 	public static void main(String[] args) {
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				loginFrame = null;
@@ -123,7 +127,7 @@ public class Client {
 
 	public static String [] listen() {//zwraca to co wysłuchał - nickname od którego idzie + wiadomość
 		String username = null;
-		String message = null;
+		String message = "";
 		String[] envelope =  new String[2];
 		while(true) {
 			try {
@@ -134,20 +138,22 @@ public class Client {
 	            	System.out.println("jakaś wiadomość");//DEBUGGING
 	                line = reader.readLine();   
 	                username = line;
+	                line = reader.readLine();
 	                while(!line.equals("~$end&")) {
 	                	System.out.println(line);//DEBUGGING
 	                	message = message + line + "\r\n";
 	                	line = reader.readLine();
-	                } 
-	             envelope [0] = username;
-	             envelope [1] = message;   
-	             return envelope;
+	                }
+	                 envelope [0] = username;
+		             envelope [1] = message;       
+		             return envelope;
+	            }else if (line.equals("~$instr&")) {
+	            		            
 	            }	         
 	        }catch (IOException e) {
 	            e.printStackTrace();
 	          return null;
-	        }
-	            
+	        }     
 	    }
 	}
 }
