@@ -25,12 +25,14 @@ public class MessageFrame extends JFrame{
 	String text = "";
 	GuiMessageFrame gui;
 	String username = null;
+	String myName = null;
 	
 	static JFrame f = new JFrame();//do option pane
 	
-	public MessageFrame(String username) throws LineUnavailableException, IOException {	
+	public MessageFrame(String username, String myName) throws LineUnavailableException, IOException {	
 		this.frame = this;		
 		this.username = username;
+		this.myName = myName;
 		this.gui = new GuiMessageFrame(this);		
 		this.setSize(360,520);
 		this.setVisible(true);
@@ -66,6 +68,7 @@ public class MessageFrame extends JFrame{
         }		
 	}
 
+	public String getMyName() {return this.myName;}
 	public String getUsername() {return this.username;}
 	public GuiMessageFrame getGui() {return this.gui;}
 	

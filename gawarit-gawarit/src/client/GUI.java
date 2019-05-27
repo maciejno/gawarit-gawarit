@@ -91,7 +91,7 @@ public class GUI extends JPanel implements ActionListener{
 		if(action.equals("send")) {
 			String [] words = chooseFriend.getSelectedItem().toString().split(" ");
 			try {
-				Client.messageFrames.put(words[0], new MessageFrame(words [0]));//username w konstruktorze przekazuje
+				Client.messageFrames.put(words[0], new MessageFrame(words [0], mainFrame.getMyName()));//username w konstruktorze przekazuje
 			} catch (LineUnavailableException | IOException e) {
 				e.printStackTrace();
 			}

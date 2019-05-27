@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -184,12 +185,17 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 			
 			String [] lines = response.split(System.getProperty("line.separator"));
 			if(lines[0].equals("~$instr&") && lines[1].equals("~$accpass&")) {
-				Client.updateFriendsMap(lines);
-				
 				//ustawia widoczność okienek
 				Client.framesMap.put(Client.loginFrame, false);
-				Client.framesMap.put(Client.mainFrame, true);
+				try {
+					Client.mainFrame = new MainFrame(login);
+				} catch (LineUnavailableException | IOException e) {
+					e.printStackTrace();
+				}	
+				Client.framesMap.put(Client.mainFrame, true);			
 				Client.setVisibleFrames();
+				Client.updateFriendsMap(lines);
+		
 				Thread fred = new Thread(Client.mainFrame);
 				fred.start();
 			}else if(lines[1].equals("~$rejpass&")) {

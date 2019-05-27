@@ -23,6 +23,7 @@ public class Client {
 	static LoginFrame loginFrame;
 	static MainFrame mainFrame;
 	static Map<String, MessageFrame> messageFrames = new HashMap<String, MessageFrame>();
+	public static String myName = null;
 	
 	public static Socket socket;
 	static BufferedWriter writer;
@@ -35,7 +36,6 @@ public class Client {
 				mainFrame = null;
 				try {
 					loginFrame = new LoginFrame();
-					mainFrame = new MainFrame();
 					
 				} catch (LineUnavailableException | IOException e) {					
 					e.printStackTrace();
@@ -50,8 +50,8 @@ public class Client {
 	
 	public static void initialize() {
 		try {
-			socket = new Socket(InetAddress.getLocalHost().getHostName(), 44242);
-			//socket = new Socket("10.68.16.164", 44242);
+			//socket = new Socket(InetAddress.getLocalHost().getHostName(), 44242);
+			socket = new Socket("10.68.16.164", 44242);
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));		
 		} catch (IOException e) {
@@ -59,7 +59,6 @@ public class Client {
 		} //jest localhost, ale trzeba bedzie zmienic na jakis inny
 		
 		framesMap.put(loginFrame, true);
-		framesMap.put(mainFrame, false);
 	}
 
 	public static String communicate (String message) throws Exception{//wysyla i odbiera z serwera
@@ -133,8 +132,10 @@ public class Client {
 	            System.out.println("czytam");//DEBUGGING
 	            if(line.equals("~$message&")) {
 	            	System.out.println("jakaś wiadomość");//DEBUGGING
-	                username = reader.readLine();                
+	                line = reader.readLine();   
+	                username = line;
 	                while(!line.equals("~$end&")) {
+	                	System.out.println(line);//DEBUGGING
 	                	message = message + line + "\r\n";
 	                	line = reader.readLine();
 	                } 
