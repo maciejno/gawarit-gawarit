@@ -44,7 +44,8 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
         historyPane = new JEditorPane();
         scrollPane = new JScrollPane(textPane, 
         		JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        historyScrollPane = new JScrollPane(historyPane);
+        historyScrollPane = new JScrollPane(historyPane,
+        		JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         historyPane.setText(history);
         textPane.setText(message);//ustawia wiadomosc powitalna
         sendButton = new JButton("Wyślij");
@@ -79,7 +80,7 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
-		if(ae.getActionCommand().equals("send")) {
+		if(ae.getActionCommand().equals("send") && !textPane.getText().equals("")) {
 			message = Client.createMessage("~$message&",nick + "\r\n" + textPane.getText());			
 			String newHistory = historyPane.getText() + "Ja:\r\n" + textPane.getText() + "\r\n\r\n";//dopisuje do obecnego tekstu nową wiadomość
 			historyPane.setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
@@ -92,8 +93,7 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
 			}
 		}
 	}
-	
-	
+		
 	public JEditorPane getHistoryPane() {return historyPane;}
 	public JScrollPane getHistoryScrollPane() {return historyScrollPane;}
 }

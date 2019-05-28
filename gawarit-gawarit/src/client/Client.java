@@ -83,14 +83,14 @@ public class Client {
 	       //System.out.println("response:" + response); //debugging
 	       line = reader.readLine();
 	   }
-	   System.out.println("response:" + response); //debugging
+	   System.out.println("Otrzymuję odpowiedz:\n" + response); //debugging
 	   return response;
    }
 	
 	public static void send (String message) throws Exception{//tylko wysyla       
 		   writer.write(message);
 		   writer.flush();
-		   System.out.println("message:" + message);//debugging
+		   System.out.println("Wysyłam wiadomość:\n" + message);//debugging
 	   }
 	
 	public static void updateFriendsBox() {//odświeża combo box ze znajomymi

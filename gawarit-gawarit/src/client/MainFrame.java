@@ -26,7 +26,7 @@ public class MainFrame extends JFrame{
 	MainFrame mainFrame;
 
 	JMenuBar menuBar;
-	JMenu menu;
+	JMenu menu,options;
 	JMenuItem refresh,logout, end;
 	
 	JEditorPane textArea;
@@ -55,15 +55,17 @@ public class MainFrame extends JFrame{
 		
 		menuBar = new JMenuBar();
 		menu = new JMenu("Zakończ");
+		options = new JMenu("Opcje");
 		refresh = new JMenuItem("Odśwież");
 		logout = new JMenuItem("Wyloguj");
 		end = new JMenuItem("Koniec programu");		
 		
 		this.setJMenuBar(menuBar);
+		menuBar.add(options);
 		menuBar.add(menu);
-		menu.add(refresh);
 		menu.add(logout);
-		menu.add(end);		
+		menu.add(end);	
+		options.add(refresh);
 		
 		textArea = new JEditorPane();
 		panel = new JPanel();panel.setLayout(new GridLayout(1,1));
@@ -97,6 +99,7 @@ public class MainFrame extends JFrame{
 					e.printStackTrace();
 				}
 				Client.scheduler.shutdown();
+				Client.messageFrames.clear();
 			}
 		});
 		
@@ -124,13 +127,9 @@ public class MainFrame extends JFrame{
             System.err.println("Blad podczas ustawiania LookAndFeel");
         }		
 	}
-	
-		
+			
 	public String getMyName() {return myName;}
 	public JMenu getMenu() {return menu;};
 	public JMenuItem getEnd() {return end;};
-	public GUI getGui() {return userInterface;}
-
-
-	
+	public GUI getGui() {return userInterface;}	
 }
