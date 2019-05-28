@@ -1,12 +1,17 @@
 package server;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
-import java.net.InetAddress;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 
 
@@ -47,6 +52,15 @@ public class ServerMain {
         Monitor("Port:  " + serverSocket.getLocalPort());
         Monitor("");
         Integer tempUsername=0;
+        
+        //ŻEBY SIĘ SAMO SCROLLOWAŁO - #sabotaż
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+			}
+        });
+        //--------------------------------
         while (true) {
             StatusUpdate();
             Socket socket = serverSocket.accept();

@@ -106,14 +106,6 @@ public class LoginFrame extends JFrame implements Runnable{
 		            	String [] lines = message.split(System.getProperty("line.separator"));   
 		            	
 		            	//SPRAWDZA CO JEST W LINII PIERWSZEJ
-						/*if(lines[0].equals("~$accpass&")) { //jeśli akceptacja rejestracji		
-							Client.updateFriendsMap(lines);// w przypadku rejestracji tylko sam on jest swoim znajomym											
-							//ustawia widoczność okienek
-							Client.framesMap.put(Client.loginFrame, false);
-							Client.framesMap.put(Client.mainFrame, true);
-							Client.setVisibleFrames();
-						}
-						else*/
 		            	if(lines[1].equals("~$accpass&")) { //jeśli udało się zalogować lub zarejestrować
 							//ustawia widoczność okienek
 		            		System.out.println("Udało się zalogować");//DEBUGGING
