@@ -63,11 +63,7 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		if(ae.getActionCommand().equals("send")) {
-			message = "~$message&\r\n" +
-					nick + "\r\n" +
-					textPane.getText() + "\r\n" +
-					"~$end&\r\n";
-			
+			message = Client.createMessage("~$message&",nick + "\r\n" + textPane.getText());			
 			String newHistory = historyPane.getText() + "Ja:\r\n" + textPane.getText() + "\r\n\r\n";//dopisuje do obecnego tekstu nową wiadomość
 			historyPane.setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
 			try {

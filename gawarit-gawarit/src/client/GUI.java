@@ -103,26 +103,13 @@ public class GUI extends JPanel implements ActionListener{
 			
 		//WYLOGOWYWANIE
 		}else if(action.equals("logout")) {
-			message = "~$instr&\r\n" + 
-					"~$logout&\r\n" + 					
-					"~$end&\r\n";
+			
+			message = Client.createMessage("~$instr&","~$logout&");
 			try {
-				response = Client.communicate(message);//wysyla i odbiera
+				Client.send(message);//wysyła
 			} catch (Exception e) {
 				e.printStackTrace();
 			}			
-			String [] lines = response.split(System.getProperty("line.separator"));
-			if(lines[0].equals("~$instr&")) {
-				//ustawia widoczność okienek
-				Client.framesMap.put(Client.loginFrame, true);
-				Client.framesMap.put(Client.mainFrame, false);
-				Client.setVisibleFrames();
-				Client.restartSocket();
-			}else {
-				JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
-				System.out.println("Coś poszło nie tak");
-			}
-		
 		//DODAWANIE ZNAJOMEGO
 		}else if(action.equals("add")) {
 			newFriend = dodajField.getText();

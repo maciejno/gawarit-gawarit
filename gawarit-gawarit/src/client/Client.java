@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class Client {
@@ -44,18 +45,18 @@ public class Client {
 				} catch (LineUnavailableException | IOException e) {					
 					e.printStackTrace();
 				}		
-				//loginFrame.setVisible(true);
+				//loginFrame.setVisible(true);				
 				initialize();
-				setVisibleFrames();		
-				
+				Client.exec.execute(Client.loginFrame);
+				setVisibleFrames();						
 			}
 		});				
 	}
 	
 	public static void initialize() {
 		try {
-			//socket = new Socket(InetAddress.getLocalHost().getHostName(), 44242);
-			socket = new Socket("10.68.16.164", 44242);
+			socket = new Socket(InetAddress.getLocalHost().getHostName(), 44242);
+			//socket = new Socket("10.68.16.164", 44242);
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));		
 		} catch (IOException e) {
@@ -124,36 +125,19 @@ public class Client {
 		}
 		Client.initialize();
 	}
-
-	public static String [] listen() {//zwraca to co wysłuchał - nickname od którego idzie + wiadomość
-		String username = null;
-		String message = "";
-		String[] envelope =  new String[2];
-		while(true) {
-			try {
-				System.out.println("czekam aż coś przyjdzie");//DEBUGGING
-	            String line = reader.readLine();
-	            System.out.println("czytam");//DEBUGGING
-	            if(line.equals("~$message&")) {
-	            	System.out.println("jakaś wiadomość");//DEBUGGING
-	                line = reader.readLine();   
-	                username = line;
-	                line = reader.readLine();
-	                while(!line.equals("~$end&")) {
-	                	System.out.println(line);//DEBUGGING
-	                	message = message + line + "\r\n";
-	                	line = reader.readLine();
-	                }
-	                 envelope [0] = username;
-		             envelope [1] = message;       
-		             return envelope;
-	            }else if (line.equals("~$instr&")) {
-	            		            
-	            }	         
-	        }catch (IOException e) {
-	            e.printStackTrace();
-	          return null;
-	        }     
-	    }
+	
+	public static String createMessage (String indicator, String content) {		
+		String message = indicator + "\r\n" +  
+				content + "\r\n" +
+				"~$end&\r\n";
+		return message;
 	}
+	
+	public static String createMessage (String indicator,String command, String content) {		
+		String message = indicator + "\r\n" + 
+				command + "\r\n" + 
+				content + "\r\n" +
+				"~$end&\r\n";
+		return message;
+	}	
 }

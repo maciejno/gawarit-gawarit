@@ -7,10 +7,11 @@ import java.io.IOException;
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 	
-public class LoginFrame extends JFrame{
+public class LoginFrame extends JFrame implements Runnable{
 
 		private static final long serialVersionUID = 1L;
 		GuiLoginFrame userInterface;
@@ -18,6 +19,7 @@ public class LoginFrame extends JFrame{
 		
 		JPanel panel;
 		String text = "";
+		String [] envelope = new String [2];
 		
 		static JFrame f = new JFrame();//do option pane
 		
@@ -45,6 +47,106 @@ public class LoginFrame extends JFrame{
 	            e1.printStackTrace();
 	            System.err.println("Blad podczas ustawiania LookAndFeel");
 	        }		
-		}		
+		}
+
+		public GuiLoginFrame getGui() {return this.userInterface;}	
+		
+		@Override
+		public void run() {
+			
+			while(true) {
+			String username = null;
+			String message = "";
+				try {
+					System.out.println("czekam aż coś przyjdzie");//DEBUGGING
+		            String line = Client.reader.readLine();
+		            System.out.println("czytam");//DEBUGGING
+		            
+		            //JEŚLI DOSTAŁ WIADOMOŚĆ
+		            if(line.equals("~$message&")) {
+		            	System.out.println("jakaś wiadomość");//DEBUGGING
+		                line = Client.reader.readLine();   
+		                username = line;
+		                line = Client.reader.readLine();
+		                while(!line.equals("~$end&")) {
+		                	System.out.println(line);//DEBUGGING
+		                	message = message + line + "\r\n";
+		                	line = Client.reader.readLine();
+		                }      		  
+						if(Client.messageFrames.get(username)!=null) {//jesli juz jest to okienko
+							//to sprawdza czy jest widoczne, a jak nie to uwidacznia
+							if(!Client.messageFrames.get(username).isVisible())
+								Client.messageFrames.get(username).setVisible(true);
+
+							//System.out.println("wypiszę:" + Client.messageFrames.get(username).getGui().getHistoryPane().getText());
+							String oldHistory = Client.messageFrames.get(username).getGui().getHistoryPane().getText();				
+							String newHistory = oldHistory + username + ":\r\n" + message;//dopisuje do obecnego tekstu nową wiadomość
+							Client.messageFrames.get(username).getGui().getHistoryPane().setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
+						}else {//jesli jeszcze nie ma okienka to dodaje a dalej to samo
+							try {
+								Client.messageFrames.put(username, new MessageFrame(username,Client.mainFrame.getMyName()));
+								String newHistory = username + ":\r\n" + message;//dopisuje do obecnego tekstu nową wiadomość
+								Client.messageFrames.get(username).getGui().getHistoryPane().setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
+							} catch (LineUnavailableException | IOException e) {
+								e.printStackTrace();
+							}
+						}
+						
+						//JEŚLI DOSTAŁ INSTRUKCJĘ
+		            }else if (line.equals("~$instr&")) {
+		            	System.out.println("jakaś instrukcja");//DEBUGGING
+		            }
+		            	//WCZYTUJE CAŁĄ INSTRUKCJĘ
+		            	while(!line.equals("~$end&")) {
+			                	System.out.println(line);//DEBUGGING
+			                	message = message + line + "\r\n";
+			                	line = Client.reader.readLine();
+		            	}
+		            	//DZIELI JĄ NA LINIE
+		            	String [] lines = message.split(System.getProperty("line.separator"));   
+		            	
+		            	//SPRAWDZA CO JEST W LINII PIERWSZEJ
+						/*if(lines[0].equals("~$accpass&")) { //jeśli akceptacja rejestracji		
+							Client.updateFriendsMap(lines);// w przypadku rejestracji tylko sam on jest swoim znajomym											
+							//ustawia widoczność okienek
+							Client.framesMap.put(Client.loginFrame, false);
+							Client.framesMap.put(Client.mainFrame, true);
+							Client.setVisibleFrames();
+						}
+						else*/
+		            	if(lines[1].equals("~$accpass&")) { //jeśli udało się zalogować lub zarejestrować
+							//ustawia widoczność okienek
+		            		System.out.println("Udało się zalogować");//DEBUGGING
+							Client.framesMap.put(Client.loginFrame, false);
+							try {
+								Client.mainFrame = new MainFrame(Client.loginFrame.getGui().getLogin());
+							} catch (LineUnavailableException | IOException e) {
+								e.printStackTrace();
+							}	
+							Client.framesMap.put(Client.mainFrame, true);			
+							Client.setVisibleFrames();
+							Client.updateFriendsMap(lines);	              
+						}else if(lines[1].equals("~$rejpass&")) {
+							JOptionPane.showMessageDialog(null,lines[2], null, JOptionPane.INFORMATION_MESSAGE);
+							System.out.println("Błędne dane logowania");
+							Client.restartSocket();
+						}else if(lines[1].equals("~$logout&")) {
+							//ustawia widoczność okienek
+							Client.framesMap.put(Client.loginFrame, true);
+							Client.framesMap.put(Client.mainFrame, false);
+							Client.setVisibleFrames();
+							Client.restartSocket();
+						}else {
+							JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
+							System.out.println("Coś poszło nie tak");
+							Client.restartSocket();
+						}		            	
+		        }catch (IOException e) {
+		            e.printStackTrace();
+		        }				
+			}
+		}
+		
+		
 	}
 

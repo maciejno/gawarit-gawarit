@@ -67,12 +67,9 @@ public class MessageFrame extends JFrame{
             System.err.println("Blad podczas ustawiania LookAndFeel");
         }		
 	}
-
 	public String getMyName() {return this.myName;}
 	public String getUsername() {return this.username;}
-	public GuiMessageFrame getGui() {return this.gui;}
-	
-	
+	public GuiMessageFrame getGui() {return this.gui;}	
 }
 
 
