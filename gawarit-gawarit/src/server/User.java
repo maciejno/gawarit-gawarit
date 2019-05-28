@@ -2,6 +2,10 @@ package server;
 
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,8 +53,11 @@ public class User {
         return true;
     }
 
-    void register(String login, String pass) {
-        
+    String register(String login, String pass) {
+
+
+    return "nie dziala";
+        //file.createNewFile();
     }
 
 

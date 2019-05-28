@@ -88,8 +88,10 @@ public class Connection implements Runnable {
                     if (line.equals("~$register&")) {
                         login = receiver.readLine(); //odczytanie loginu i hasła wysyłanego przez usera
                         pass = receiver.readLine();
+                        if(!receiver.readLine().equals("~$end&"))
+                            continue;
                         ServerMain.Monitor("Nowy uzytkownik: " + login);
-                        user.register(login, pass);
+                        System.out.println(user.register(login, pass));
 
 
                         ServerMain.Monitor("rejestracja?!");
@@ -218,9 +220,6 @@ public class Connection implements Runnable {
         }
     }
 
-    private void register() { //funkcja do obsługi rejestracji
-
-    }
 
     void sendMessage(String target, String message) { //funkcja do osługi wysyłania wiadomości
         try {
@@ -257,6 +256,8 @@ public class Connection implements Runnable {
     void logout() {
         try {
             transmitter.write("~$instr&");
+            transmitter.write("\n");
+            transmitter.write("~$logout&");
             transmitter.write("\n");
             transmitter.write("~$end&");
             transmitter.write("\n");
