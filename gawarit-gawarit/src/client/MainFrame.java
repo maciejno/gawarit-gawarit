@@ -1,5 +1,7 @@
 package client;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -9,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.ImageIcon;
@@ -31,7 +35,7 @@ public class MainFrame extends JFrame{
 
 	JMenuBar menuBar;
 	JMenu menu;
-	JMenuItem logout, end;
+	JMenuItem refresh,logout, end;
 	
 	JEditorPane textArea;
 	JPanel panel;
@@ -49,9 +53,11 @@ public class MainFrame extends JFrame{
 		this.setMinimumSize(new Dimension(300,400));//ustawia minimalny rozmiar okna
 		this.setTitle(myName + "-zalogowano");
 		ImageIcon mainIcon = new ImageIcon(this.getClass().getResource("/logo_mini.png"));
-		this.setIconImage(mainIcon.getImage());
-		
+		this.setIconImage(mainIcon.getImage());		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		
+		
 		this.setLayout(new BorderLayout());
 		
 		userInterface = new GUI(this);
@@ -60,11 +66,13 @@ public class MainFrame extends JFrame{
 
 		menuBar = new JMenuBar();
 		menu = new JMenu("Zakończ");
+		refresh = new JMenuItem("Odśwież");
 		logout = new JMenuItem("Wyloguj");
 		end = new JMenuItem("Koniec programu");		
 		
 		this.setJMenuBar(menuBar);
 		menuBar.add(menu);
+		menu.add(refresh);
 		menu.add(logout);
 		menu.add(end);		
 		
@@ -76,6 +84,19 @@ public class MainFrame extends JFrame{
 		panel.add(textArea);
 		f.add(panel);
 		
+		refresh.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				//ODŚWIEŻANIE LISTY ZNAJOMYCH
+				message = Client.createMessage("~$instr&","~$friends&");
+				try {
+					Client.send(message);//wysyła
+				} catch (Exception e) {
+					e.printStackTrace();
+				}		
+			}
+		});
+		
 		logout.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
@@ -85,7 +106,8 @@ public class MainFrame extends JFrame{
 					Client.send(message);//wysyła
 				} catch (Exception e) {
 					e.printStackTrace();
-				}		
+				}
+				Client.scheduler.shutdown();
 			}
 		});
 		
@@ -99,6 +121,7 @@ public class MainFrame extends JFrame{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				Client.scheduler.shutdown();
 				System.exit(1);	
 			}			
 		});
@@ -111,9 +134,13 @@ public class MainFrame extends JFrame{
             System.err.println("Blad podczas ustawiania LookAndFeel");
         }		
 	}
+	
 		
 	public String getMyName() {return myName;}
 	public JMenu getMenu() {return menu;};
 	public JMenuItem getEnd() {return end;};
 	public GUI getGui() {return userInterface;}
+
+
+	
 }

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JButton;
@@ -38,6 +39,7 @@ public class Client {
 	static Map<String, MessageFrame> messageFrames = new HashMap<String, MessageFrame>();
 	public static String myName = null;
 	public static ExecutorService exec = Executors.newSingleThreadExecutor();
+	public static ScheduledExecutorService scheduler;
 	
 	public static Color krasnyj = new Color(255,70,70);
 	public static Color galubyj = new Color(80,80,255);

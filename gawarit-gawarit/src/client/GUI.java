@@ -126,46 +126,22 @@ public class GUI extends JPanel implements ActionListener{
 		//DODAWANIE ZNAJOMEGO
 		}else if(action.equals("add")) {
 			newFriend = dodajField.getText();
-			message = "~$instr&\r\n" + 
-					"~$addfriend&\r\n" + 
-					newFriend + 
-					"~$end&\r\n";
+			message = Client.createMessage("~$instr&", "~$addfriend&",newFriend);
 			try {
-				response = Client.communicate(message);//wysyla i odbiera
+				Client.send(message);//wysyla
 			} catch (Exception e) {
 				e.printStackTrace();
 			}			
-			String [] lines = response.split(System.getProperty("line.separator"));
-			if(lines[0].equals("~$instr&") && lines[1].equals("~$rejectedinv&")) {
-				JOptionPane.showMessageDialog(null, "Nie udało się dodać znajomego. "
-						+ "Upewnij się, że istnieje i chce z tobą rozmawiać :)", null, JOptionPane.INFORMATION_MESSAGE);
-			}else if(lines[0].equals("~$instr&") && lines[1].equals("~$acceptedinv&")){
-				Client.friendsMap.put(lines[2], new Boolean("true")); //dodaje nowego znajomego do mapy
-				Client.updateFriendsBox();
-			}else {
-				JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
-				System.out.println("Coś poszło nie tak");
-			}	
-			
+								
 		//USUWANIE ZNAJOMEGO
 		}else if(action.equals("delete")) {
 			badGuy = usunField.getText();
-			message = "~$instr&\r\n" + 
-					"~$delfriend&\r\n" + 
-					badGuy + 
-					"~$end&\r\n";
+			message = Client.createMessage("~$instr&", "~$delfriend&", badGuy);
 			try {
-				response = Client.communicate(message);//wysyla i odbiera
+				Client.send(message);//wysyla
 			} catch (Exception e) {
 				e.printStackTrace();
-			}			
-			String [] lines = response.split(System.getProperty("line.separator"));
-			if(lines[0].equals("~$instr&") && lines[1].equals("~$friends&")) {
-				Client.updateFriendsMap(lines); //po usunieciu updateuje mape znajomych
-			}else {
-				JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
-				System.out.println("Coś poszło nie tak");
-			}	
+			}				
 		}
 	}
 }

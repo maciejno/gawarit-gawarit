@@ -1,5 +1,7 @@
 package client;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -9,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JButton;
@@ -179,11 +183,22 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 		if(action.equals("login")) {
 			message = Client.createMessage("~$instr&","~$login&", login + "\r\n" + password);
 			try {
-				Client.send(message);//wysyla i odbiera
+				Client.send(message);//wysyla
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+			Client.scheduler = Executors.newScheduledThreadPool(1);
+			Client.scheduler.scheduleAtFixedRate( (new Runnable() {// co pewien czas wysyła żądanie listy znajomych
+				@Override
+				public void run() {
+					message = Client.createMessage("~$instr&", "~$friends&");
+					try {
+						Client.send(message);//wysyla
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}), 5, 5, SECONDS);
 			
 		}
 		
