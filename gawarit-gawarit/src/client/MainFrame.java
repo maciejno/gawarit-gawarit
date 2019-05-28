@@ -47,15 +47,12 @@ public class MainFrame extends JFrame{
 		ImageIcon mainIcon = new ImageIcon(this.getClass().getResource("/logo_mini.png"));
 		this.setIconImage(mainIcon.getImage());		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-		
-		
+			
 		this.setLayout(new BorderLayout());
 		
 		userInterface = new GUI(this);
 		this.add(userInterface);
 		
-
 		menuBar = new JMenuBar();
 		menu = new JMenu("Zakończ");
 		refresh = new JMenuItem("Odśwież");
