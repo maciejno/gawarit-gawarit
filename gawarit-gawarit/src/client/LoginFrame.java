@@ -94,8 +94,8 @@ public class LoginFrame extends JFrame implements Runnable{
 						
 						//JEŚLI DOSTAŁ INSTRUKCJĘ
 		            }else if (line.equals("~$instr&")) {
+		            	
 		            	System.out.println("jakaś instrukcja");//DEBUGGING
-		            }
 		            	//WCZYTUJE CAŁĄ INSTRUKCJĘ
 		            	while(!line.equals("~$end&")) {
 			                	System.out.println(line);//DEBUGGING
@@ -140,7 +140,8 @@ public class LoginFrame extends JFrame implements Runnable{
 							JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
 							System.out.println("Coś poszło nie tak");
 							Client.restartSocket();
-						}		            	
+						}
+		            }
 		        }catch (IOException e) {
 		            e.printStackTrace();
 		        }				
