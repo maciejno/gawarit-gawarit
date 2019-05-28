@@ -1,5 +1,9 @@
 package client;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -7,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +19,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.sound.sampled.LineUnavailableException;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 public class Client {
@@ -25,10 +33,12 @@ public class Client {
 	static Map<String, Boolean> friendsMap = new HashMap<String, Boolean>();
 	static LoginFrame loginFrame;
 	static MainFrame mainFrame;
+	static IpFrame ipFrame;
 	static Map<String, MessageFrame> messageFrames = new HashMap<String, MessageFrame>();
 	public static String myName = null;
 	public static ExecutorService exec = Executors.newSingleThreadExecutor();
 	
+	public static String ip;
 	public static Socket socket;
 	static BufferedWriter writer;
 	static BufferedReader reader;
@@ -36,27 +46,31 @@ public class Client {
 	public static void main(String[] args) {
 		
 		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				loginFrame = null;
-				mainFrame = null;
+			public void run() {				
 				try {
-					loginFrame = new LoginFrame();
-					
-				} catch (LineUnavailableException | IOException e) {					
+					InetAddress host = InetAddress.getLocalHost();
+					ip = host.getHostAddress();
+				} catch (UnknownHostException e) {
 					e.printStackTrace();
-				}		
-				//loginFrame.setVisible(true);				
-				initialize();
-				Client.exec.execute(Client.loginFrame);
-				setVisibleFrames();						
+				}				
+				loginFrame = null;
+				mainFrame = null;				
+				ipFrame = new IpFrame();						
 			}
 		});				
+	}
+	
+	public static void getServerIP() {		
+		
+		
+
 	}
 	
 	public static void initialize() {
 		try {
 			socket = new Socket(InetAddress.getLocalHost().getHostName(), 44242);
 			//socket = new Socket("10.68.16.164", 44242);
+			//socket = new Socket(ip, 44242);
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));		
 		} catch (IOException e) {
