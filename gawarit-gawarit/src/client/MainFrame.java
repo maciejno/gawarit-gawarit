@@ -1,18 +1,11 @@
 package client;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.ImageIcon;
@@ -23,7 +16,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 
@@ -122,6 +114,7 @@ public class MainFrame extends JFrame{
 					e.printStackTrace();
 				}
 				Client.scheduler.shutdown();
+				Client.exec.shutdown();
 				System.exit(1);	
 			}			
 		});
