@@ -23,7 +23,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 
-public class MainFrame extends JFrame implements Runnable{
+public class MainFrame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	GUI userInterface;
@@ -36,7 +36,6 @@ public class MainFrame extends JFrame implements Runnable{
 	JEditorPane textArea;
 	JPanel panel;
 	String text = "";
-	String [] envelope = new String [2];
 	String myName = null;
 	
 	static JFrame f = new JFrame();//do option pane
@@ -88,34 +87,6 @@ public class MainFrame extends JFrame implements Runnable{
             e1.printStackTrace();
             System.err.println("Blad podczas ustawiania LookAndFeel");
         }		
-	}
-	
-	@Override
-	public void run() {
-		while(true) {
-			System.out.println("zaczyna słuchać");//DEBUGGING
-			envelope = Client.listen();
-			System.out.println("dostałem wiadomość");//DEBUGGING
-			String username = envelope[0];
-			String message = envelope[1];
-			if(Client.messageFrames.get(username)!=null) {//jesli juz jest to okienko
-				//to sprawdza czy jest widoczne, a jak nie to uwidacznia
-				if(!Client.messageFrames.get(username).isVisible()) Client.messageFrames.get(username).setVisible(true);
-
-				//System.out.println("wypiszę:" + Client.messageFrames.get(username).getGui().getHistoryPane().getText());
-				String oldHistory = Client.messageFrames.get(username).getGui().getHistoryPane().getText();				
-				String newHistory = oldHistory + username + ":\r\n" + message;//dopisuje do obecnego tekstu nową wiadomość
-				Client.messageFrames.get(username).getGui().getHistoryPane().setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
-			}else {//jesli jeszcze nie ma okienka to dodaje a dalej to samo
-				try {
-					Client.messageFrames.put(username, new MessageFrame(username,myName));
-					String newHistory = username + ":\r\n" + message;//dopisuje do obecnego tekstu nową wiadomość
-					Client.messageFrames.get(username).getGui().getHistoryPane().setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
-				} catch (LineUnavailableException | IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}				
 	}
 		
 	public String getMyName() {return myName;}
