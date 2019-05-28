@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.UIManager;
 	
 public class LoginFrame extends JFrame implements Runnable{

@@ -38,7 +38,7 @@ public class MessageFrame extends JFrame{
 		this.setVisible(true);
 		this.setResizable(true);//zeby rozmiar okna byl staly
 		this.setMinimumSize(new Dimension(360,520));//ustawia minimalny rozmiar okna
-		this.setTitle("Gawarit-Gawarit");
+		this.setTitle(Client.mainFrame.getMyName() + "-zalogowano");
 		ImageIcon mainIcon = new ImageIcon(this.getClass().getResource("/logo_mini.png"));
 		this.setIconImage(mainIcon.getImage());
 		

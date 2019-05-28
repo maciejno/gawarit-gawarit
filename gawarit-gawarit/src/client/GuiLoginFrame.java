@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -84,6 +85,10 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 		pass2Label = new JLabel("Powtórz hasło:");
 		logLabel = new JLabel("LOGOWANIE", SwingConstants.CENTER);
 		signLabel = new JLabel("\n REJESTRACJA", SwingConstants.CENTER);
+		
+		loginButton.setBackground(Client.galubyj);
+		loginButton.setForeground(Color.WHITE);
+		signButton.setBackground(Client.krasnyj);
 		
 		logLabel.setFont(labelFont);
 		signLabel.setFont(labelFont);

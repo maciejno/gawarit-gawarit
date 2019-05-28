@@ -1,11 +1,10 @@
 package client;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.InetAddress;
-
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,10 +25,13 @@ public class IpFrame extends JFrame {
 		this.setSize(300, 100);
 		ImageIcon mainIcon = new ImageIcon(this.getClass().getResource("/logo_mini.png"));
 		this.setIconImage(mainIcon.getImage());
+		this.setTitle("Gawarit-Gawarit");
 		ipPanel.setLayout(new BorderLayout());
 		
 		JTextField ipField = new JTextField(Client.ip);
 		JButton ipButton = new JButton("OK");	
+		ipButton.setBackground(Client.galubyj);
+		ipButton.setForeground(Color.white);
 		JLabel ipLabel = new JLabel("Podaj adres IP serwera:");
 		ipPanel.add(ipLabel, BorderLayout.NORTH);
 		ipPanel.add(ipField, BorderLayout.CENTER);

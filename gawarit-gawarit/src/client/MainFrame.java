@@ -31,12 +31,13 @@ public class MainFrame extends JFrame{
 
 	JMenuBar menuBar;
 	JMenu menu;
-	JMenuItem end;
+	JMenuItem logout, end;
 	
 	JEditorPane textArea;
 	JPanel panel;
 	String text = "";
 	String myName = null;
+	protected String message;
 	
 	static JFrame f = new JFrame();//do option pane
 	
@@ -59,10 +60,12 @@ public class MainFrame extends JFrame{
 
 		menuBar = new JMenuBar();
 		menu = new JMenu("Zakończ");
+		logout = new JMenuItem("Wyloguj");
 		end = new JMenuItem("Koniec programu");		
 		
 		this.setJMenuBar(menuBar);
 		menuBar.add(menu);
+		menu.add(logout);
 		menu.add(end);		
 		
 		textArea = new JEditorPane();
@@ -73,10 +76,29 @@ public class MainFrame extends JFrame{
 		panel.add(textArea);
 		f.add(panel);
 		
+		logout.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				//WYLOGOWYWANIE
+				message = Client.createMessage("~$instr&","~$logout&");
+				try {
+					Client.send(message);//wysyła
+				} catch (Exception e) {
+					e.printStackTrace();
+				}		
+			}
+		});
+		
 		end.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				JOptionPane.showMessageDialog(null,"до свидания!", null, JOptionPane.INFORMATION_MESSAGE);
+				message = Client.createMessage("~$instr&","~$logout&");
+				try {
+					Client.send(message);//wysyła
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				System.exit(1);	
 			}			
 		});

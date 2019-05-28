@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
@@ -40,7 +42,8 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
         nickLabel = new JLabel(nick, SwingConstants.CENTER);
         textPane = new JEditorPane();
         historyPane = new JEditorPane();
-        scrollPane = new JScrollPane(textPane);
+        scrollPane = new JScrollPane(textPane, 
+        		JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         historyScrollPane = new JScrollPane(historyPane);
         historyPane.setText(history);
         textPane.setText(message);//ustawia wiadomosc powitalna
@@ -57,7 +60,21 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
         gui.add(panelDown, BorderLayout.SOUTH);
         
         sendButton.addActionListener(this);
-        sendButton.setActionCommand("send");      
+        sendButton.setActionCommand("send"); 
+        
+        historyScrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+			}
+        });
+        
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+			}
+        });
     }
 
 	@Override
@@ -66,6 +83,8 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
 			message = Client.createMessage("~$message&",nick + "\r\n" + textPane.getText());			
 			String newHistory = historyPane.getText() + "Ja:\r\n" + textPane.getText() + "\r\n\r\n";//dopisuje do obecnego tekstu nową wiadomość
 			historyPane.setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
+			historyScrollPane.getVerticalScrollBar().setValue(historyScrollPane.getVerticalScrollBar().getMaximum());//scrolluje na dół
+			textPane.setText("");
 			try {
 				Client.send(message);
 			} catch (Exception e) {
@@ -74,5 +93,7 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
 		}
 	}
 	
+	
 	public JEditorPane getHistoryPane() {return historyPane;}
+	public JScrollPane getHistoryScrollPane() {return historyScrollPane;}
 }

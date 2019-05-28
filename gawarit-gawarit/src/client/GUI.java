@@ -31,7 +31,7 @@ public class GUI extends JPanel implements ActionListener{
     JPanel panelCenter, panelUp, panelUpDown;
         
     JButton sendB;
-    JButton logoutB;//wylogowanie-przycisk
+    //JButton logoutB;//wylogowanie-przycisk
     JButton dodajB;
     JButton usunB;
     JLabel imageLabel, friendLabel;
@@ -54,7 +54,7 @@ public class GUI extends JPanel implements ActionListener{
         panelUp = new JPanel();
         panelUpDown = new JPanel();
         sendB = new JButton("Napisz wiadomość");
-        logoutB = new JButton("Wyloguj");
+        //logoutB = new JButton("Wyloguj");
         dodajB = new JButton("+ znajomego");
         usunB = new JButton("- znajomego");
         imageLabel = new JLabel();
@@ -67,7 +67,9 @@ public class GUI extends JPanel implements ActionListener{
         ico = new ImageIcon(bfimg.getScaledInstance(mainFrame.getWidth(), 130,Image.SCALE_SMOOTH));
         imageLabel.setIcon(ico);
 
-        sendB.setBackground(Color.RED);
+        sendB.setBackground(Client.krasnyj);
+        chooseFriend.setBackground(Client.galubyj);
+        chooseFriend.setForeground(Color.WHITE);
         
         gui.setLayout(new BorderLayout());
         panelCenter.setLayout(new GridLayout(2,2));
@@ -86,15 +88,15 @@ public class GUI extends JPanel implements ActionListener{
         panelCenter.add(usunB);
         panelCenter.add(usunField);
 
-        gui.add(panelUp,BorderLayout.NORTH);
-        gui.add(logoutB, BorderLayout.SOUTH);
-        gui.add(panelCenter, BorderLayout.CENTER); 
+        gui.add(panelUp,BorderLayout.CENTER);
+       // gui.add(logoutB, BorderLayout.SOUTH);
+        gui.add(panelCenter, BorderLayout.SOUTH); 
         
         //action listenery dodaje
         sendB.addActionListener(this);
         sendB.setActionCommand("send");
-        logoutB.addActionListener(this);
-        logoutB.setActionCommand("logout");
+        //logoutB.addActionListener(this);
+        //logoutB.setActionCommand("logout");
         dodajB.addActionListener(this);
         dodajB.setActionCommand("add");
         usunB.addActionListener(this);
@@ -121,15 +123,6 @@ public class GUI extends JPanel implements ActionListener{
 				Client.messageFrames.get(username).setVisible(true);
 			}
 			
-		//WYLOGOWYWANIE
-		}else if(action.equals("logout")) {
-			
-			message = Client.createMessage("~$instr&","~$logout&");
-			try {
-				Client.send(message);//wysyła
-			} catch (Exception e) {
-				e.printStackTrace();
-			}			
 		//DODAWANIE ZNAJOMEGO
 		}else if(action.equals("add")) {
 			newFriend = dodajField.getText();
@@ -153,6 +146,7 @@ public class GUI extends JPanel implements ActionListener{
 				JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
 				System.out.println("Coś poszło nie tak");
 			}	
+			
 		//USUWANIE ZNAJOMEGO
 		}else if(action.equals("delete")) {
 			badGuy = usunField.getText();

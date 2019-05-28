@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -37,6 +38,9 @@ public class Client {
 	static Map<String, MessageFrame> messageFrames = new HashMap<String, MessageFrame>();
 	public static String myName = null;
 	public static ExecutorService exec = Executors.newSingleThreadExecutor();
+	
+	public static Color krasnyj = new Color(255,70,70);
+	public static Color galubyj = new Color(80,80,255);
 	
 	public static String ip;
 	public static Socket socket;
