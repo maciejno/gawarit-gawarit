@@ -66,12 +66,6 @@ public class Client {
 		});				
 	}
 	
-	public static void getServerIP() {		
-		
-		
-
-	}
-	
 	public static void initialize() {
 		try {
 			socket = new Socket(InetAddress.getLocalHost().getHostName(), 44242);

@@ -147,6 +147,24 @@ public class LoginFrame extends JFrame implements Runnable{
 							Client.updateFriendsBox();						
 						}else if(lines[1].equals("~$friends&")) {
 							Client.updateFriendsMap(lines); //po usunieciu albo po prostu updateuje mape znajomych
+						}else if(lines[1].equals("~$newinv&")) {// przyszło zaproszenie
+							String friend = lines[2];
+							int n = JOptionPane.showConfirmDialog( null, "Czy chcesz dodać " + friend + " do grona swoich znajomych?",
+		                            "Nowe zaproszenie", JOptionPane.YES_NO_OPTION);		 
+							if (n == JOptionPane.YES_OPTION) {//jak akceptuje
+								message = Client.createMessage("~$instr&","~$accinv&",friend);
+							}else {//jak nie akceptuje albo zamyka okienko
+								message = Client.createMessage("~$instr&","~$rejinv&",friend);
+			                }
+							//wysyła
+							try {
+								Client.send(message);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							//aktualizuje listę znajomych
+							Client.friendsMap.put(friend, new Boolean("true")); //dodaje nowego znajomego do mapy
+							Client.updateFriendsBox();
 						}else {
 							JOptionPane.showMessageDialog(null,"Coś poszło nie tak", null, JOptionPane.INFORMATION_MESSAGE);
 							System.out.println("Coś poszło nie tak");
