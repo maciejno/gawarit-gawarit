@@ -43,9 +43,9 @@ public class MainFrame extends JFrame{
 	public MainFrame(String myName) throws LineUnavailableException, IOException{	
 		this.mainFrame = this;
 		this.myName = myName;
-		this.setSize(300,250);
+		this.setSize(300,400);
 		this.setResizable(true);//zeby rozmiar okna byl staly
-		this.setMinimumSize(new Dimension(300,250));//ustawia minimalny rozmiar okna
+		this.setMinimumSize(new Dimension(300,400));//ustawia minimalny rozmiar okna
 		this.setTitle(myName + "-zalogowano");
 		ImageIcon mainIcon = new ImageIcon(this.getClass().getResource("/logo_mini.png"));
 		this.setIconImage(mainIcon.getImage());
@@ -55,6 +55,7 @@ public class MainFrame extends JFrame{
 		
 		userInterface = new GUI(this);
 		this.add(userInterface);
+		
 
 		menuBar = new JMenuBar();
 		menu = new JMenu("Zakończ");

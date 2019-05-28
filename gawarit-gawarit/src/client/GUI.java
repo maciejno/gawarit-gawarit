@@ -1,12 +1,17 @@
 package client;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.LineUnavailableException;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
@@ -23,15 +28,17 @@ public class GUI extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	GUI gui;
     MainFrame mainFrame;
-    JPanel panelCenter, panelUp;
+    JPanel panelCenter, panelUp, panelUpDown;
         
     JButton sendB;
     JButton logoutB;//wylogowanie-przycisk
     JButton dodajB;
     JButton usunB;
-    JLabel friendLabel;
+    JLabel imageLabel, friendLabel;
     JComboBox<String> chooseFriend;//wybor do kogo piszemy
     JTextField dodajField, usunField; //do dodania/usuniecia znajomego
+    BufferedImage bfimg;
+    ImageIcon ico;
     
     String message = "";
     String response = "";
@@ -45,22 +52,35 @@ public class GUI extends JPanel implements ActionListener{
        
         panelCenter = new JPanel();
         panelUp = new JPanel();
+        panelUpDown = new JPanel();
         sendB = new JButton("Napisz wiadomość");
         logoutB = new JButton("Wyloguj");
         dodajB = new JButton("+ znajomego");
         usunB = new JButton("- znajomego");
+        imageLabel = new JLabel();
         friendLabel = new JLabel("Do kogo chcesz napisać?");
         chooseFriend = new JComboBox<String>();
         dodajField = new JTextField("");
         usunField = new JTextField("");
+        
+        bfimg = ImageIO.read(this.getClass().getResource("/logo_full2.png"));
+        ico = new ImageIcon(bfimg.getScaledInstance(mainFrame.getWidth(), 130,Image.SCALE_SMOOTH));
+        imageLabel.setIcon(ico);
 
+        sendB.setBackground(Color.RED);
+        
         gui.setLayout(new BorderLayout());
         panelCenter.setLayout(new GridLayout(2,2));
-        panelUp.setLayout(new GridLayout(3,1));       
-        panelUp.add(friendLabel);
-        panelUp.add(chooseFriend);
-        panelUp.add(sendB);
+        panelUp.setLayout(new BorderLayout()); 
+             
+        panelUpDown.setLayout(new GridLayout(3,1));
+        panelUpDown.add(friendLabel);
+        panelUpDown.add(chooseFriend);
+        panelUpDown.add(sendB);
         
+        panelUp.add(imageLabel,BorderLayout.NORTH);
+        panelUp.add(panelUpDown, BorderLayout.CENTER);
+            
         panelCenter.add(dodajB);
         panelCenter.add(dodajField);
         panelCenter.add(usunB);

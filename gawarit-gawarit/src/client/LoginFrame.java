@@ -146,8 +146,6 @@ public class LoginFrame extends JFrame implements Runnable{
 		            e.printStackTrace();
 		        }				
 			}
-		}
-		
-		
+		}		
 	}
 
