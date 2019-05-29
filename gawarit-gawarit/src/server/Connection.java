@@ -194,7 +194,7 @@ public class Connection implements Runnable {
                     String content="";
                     line = receiver.readLine();
                     while(!line.equals("~$end&")) {
-                        content = content + line + "\n";
+                        content = content + line + "\r\n";
                         line = receiver.readLine();
                     }
                     System.out.println(recipant);
@@ -232,13 +232,13 @@ public class Connection implements Runnable {
     private void rejpass(String error) { //funkcja do odrzuania logowania
         try {
             transmitter.write("~$instr&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.write("~$rejpass&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.write(error);
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.write("~$end&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -250,22 +250,22 @@ public class Connection implements Runnable {
     private void accpass() { //funkcja do akceptacji logowania
         try {
             transmitter.write("~$instr&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.write("~$accpass&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             ServerMain.connections.put(user.username, ServerMain.connections.get(tempUsername));
             ServerMain.connections.remove(tempUsername);
             for (String friend : user.friends) {
                 transmitter.write(friend);
-                transmitter.write("\n");
+                transmitter.write("\r\n");
                 if (ServerMain.connections.containsKey(friend))
                     transmitter.write("true");
                 else
                     transmitter.write("false");
-                transmitter.write("\n");
+                transmitter.write("\r\n");
             }
             transmitter.write("~$end&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.flush();
         } catch (IOException e) {
         e.printStackTrace();
@@ -277,15 +277,15 @@ public class Connection implements Runnable {
     private void register() {
         try {
             transmitter.write("~$instr&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.write("~$accpass&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.write(user.username);
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.write("true");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.write("~$end&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.flush();
             ServerMain.connections.put(user.username, ServerMain.connections.get(tempUsername));
             ServerMain.connections.remove(tempUsername);
@@ -303,23 +303,23 @@ public class Connection implements Runnable {
             if (ServerMain.connections.containsKey(target)) { //gdy adresat jest zalogowany
                 System.out.println("dzieja sie rzeczy");
                 ServerMain.connections.get(target).transmitter.write("~$message&");
-                ServerMain.connections.get(target).transmitter.write("\n");
+                ServerMain.connections.get(target).transmitter.write("\r\n");
                 ServerMain.connections.get(target).transmitter.write(user.username);
-                ServerMain.connections.get(target).transmitter.write("\n");
+                ServerMain.connections.get(target).transmitter.write("\r\n");
                 ServerMain.connections.get(target).transmitter.write(message);
-                ServerMain.connections.get(target).transmitter.write("\n");
-                ServerMain.connections.get(target).transmitter.write("~$end&\n");
+                ServerMain.connections.get(target).transmitter.write("\r\n");
+                ServerMain.connections.get(target).transmitter.write("~$end&\r\n");
                 ServerMain.connections.get(target).transmitter.flush();
                 ServerMain.Monitor("Wiadomosc: " + user.username + " > " + target);
             } else { //gdy adresat nie jest zalogowany
                 transmitter.write("~$message&");
-                transmitter.write("\n");
+                transmitter.write("\r\n");
                 transmitter.write(target);
-                transmitter.write("\n");
+                transmitter.write("\r\n");
                 transmitter.write("Uzytkownik " + target + " jest niezalogowany.");
-                transmitter.write("\n");
+                transmitter.write("\r\n");
                 transmitter.write("~$end&");
-                transmitter.write("\n");
+                transmitter.write("\r\n");
                 transmitter.flush();
                 ServerMain.Monitor("Wiadomosc: " + user.username + " ><< " + target);
             }
@@ -332,11 +332,11 @@ public class Connection implements Runnable {
     void logout() {
         try {
             transmitter.write("~$instr&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.write("~$logout&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.write("~$end&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.flush();
             socket.close();
             ServerMain.Monitor("Uzytkownik " + user.username + " wylogowal sie.");
@@ -349,20 +349,20 @@ public class Connection implements Runnable {
     void sendFriends() {
         try {
             transmitter.write("~$instr&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.write("~$friends&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             for (String friend : user.friends) {
                 transmitter.write(friend);
-                transmitter.write("\n");
+                transmitter.write("\r\n");
                 if (ServerMain.connections.containsKey(friend))
                     transmitter.write("true");
                 else
                     transmitter.write("false");
-                transmitter.write("\n");
+                transmitter.write("\r\n");
             }
             transmitter.write("~$end&");
-            transmitter.write("\n");
+            transmitter.write("\r\n");
             transmitter.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -384,13 +384,13 @@ public class Connection implements Runnable {
                 accinv(user.username, target);
 
             ServerMain.connections.get(target).transmitter.write("~$instr&");
-            ServerMain.connections.get(target).transmitter.write("\n");
+            ServerMain.connections.get(target).transmitter.write("\r\n");
             ServerMain.connections.get(target).transmitter.write("~$newinv&");
-            ServerMain.connections.get(target).transmitter.write("\n");
+            ServerMain.connections.get(target).transmitter.write("\r\n");
             ServerMain.connections.get(target).transmitter.write(user.username);
-            ServerMain.connections.get(target).transmitter.write("\n");
+            ServerMain.connections.get(target).transmitter.write("\r\n");
             ServerMain.connections.get(target).transmitter.write("~$end&");
-            ServerMain.connections.get(target).transmitter.write("\n");
+            ServerMain.connections.get(target).transmitter.write("\r\n");
             ServerMain.connections.get(target).transmitter.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -405,13 +405,13 @@ public class Connection implements Runnable {
         try {
             System.out.println("accinv " + toWho);
             ServerMain.connections.get(toWho).transmitter.write("~$instr&");
-            ServerMain.connections.get(toWho).transmitter.write("\n");
+            ServerMain.connections.get(toWho).transmitter.write("\r\n");
             ServerMain.connections.get(toWho).transmitter.write("~$acceptedinv&");
-            ServerMain.connections.get(toWho).transmitter.write("\n");
+            ServerMain.connections.get(toWho).transmitter.write("\r\n");
             ServerMain.connections.get(toWho).transmitter.write(whoAccepted);
-            ServerMain.connections.get(toWho).transmitter.write("\n");
+            ServerMain.connections.get(toWho).transmitter.write("\r\n");
             ServerMain.connections.get(toWho).transmitter.write("~$end&");
-            ServerMain.connections.get(toWho).transmitter.write("\n");
+            ServerMain.connections.get(toWho).transmitter.write("\r\n");
             ServerMain.connections.get(toWho).transmitter.flush();
             ServerMain.connections.get(toWho).user.addFriend(user.username);
             user.addFriend(whoAccepted);
@@ -427,13 +427,13 @@ public class Connection implements Runnable {
         try {
             System.out.println("rejinv " + newfriend);
             ServerMain.connections.get(newfriend).transmitter.write("~$instr&");
-            ServerMain.connections.get(newfriend).transmitter.write("\n");
+            ServerMain.connections.get(newfriend).transmitter.write("\r\n");
             ServerMain.connections.get(newfriend).transmitter.write("~$rejectedinv&");
-            ServerMain.connections.get(newfriend).transmitter.write("\n");
+            ServerMain.connections.get(newfriend).transmitter.write("\r\n");
             ServerMain.connections.get(newfriend).transmitter.write(user.username);
-            ServerMain.connections.get(newfriend).transmitter.write("\n");
+            ServerMain.connections.get(newfriend).transmitter.write("\r\n");
             ServerMain.connections.get(newfriend).transmitter.write("~$end&");
-            ServerMain.connections.get(newfriend).transmitter.write("\n");
+            ServerMain.connections.get(newfriend).transmitter.write("\r\n");
             ServerMain.connections.get(newfriend).transmitter.flush();
             ServerMain.Monitor("Znajomi: " + newfriend + " >+<<-- " + user.username);
         } catch (IOException e) {

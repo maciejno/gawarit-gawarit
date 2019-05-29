@@ -73,7 +73,7 @@ public class ServerMain {
 
     static void Monitor(String msg){
         textArea.append(msg);
-        textArea.append("\n");
+        textArea.append("\r\n");
     }
 
     static void StatusUpdate() {
