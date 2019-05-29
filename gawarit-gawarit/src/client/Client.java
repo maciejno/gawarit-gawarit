@@ -105,8 +105,8 @@ public class Client {
     	String status = null;
     	String item = null;
     	for(String key : Client.friendsMap.keySet()) {
-    		if(Client.friendsMap.get(key)) status = ": aktywny";
-    		else status = ": nieaktywny";
+    		if(Client.friendsMap.get(key)) status = " : aktywny";
+    		else status = " : nieaktywny";
     		item = key + status;
     		mainFrame.getGui().getChooseFriend().addItem(item);
     	}

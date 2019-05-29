@@ -131,7 +131,7 @@ public class LoginFrame extends JFrame implements Runnable{
 						}else if(lines[1].equals("~$rejectedinv&")) {
 							String friend = lines[2];					
 							JOptionPane.showMessageDialog(null, "Nie udało się dodać znajomego " + friend 
-									+ ". Upewnij się, że istnieje i chce z tobą rozmawiać :)", null, JOptionPane.INFORMATION_MESSAGE);
+									+ ". Być może jest niezalogowany albo nie chce z tobą rozmawiać :)", null, JOptionPane.INFORMATION_MESSAGE);
 						}else if(lines[1].equals("~$acceptedinv&")){
 							String friend = lines[2];
 							Client.friendsMap.put(friend, new Boolean("true")); //dodaje nowego znajomego do mapy
