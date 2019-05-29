@@ -127,6 +127,8 @@ public class LoginFrame extends JFrame implements Runnable{
 							Client.framesMap.put(Client.loginFrame, true);
 							Client.framesMap.put(Client.mainFrame, false);
 							Client.setVisibleFrames();
+							Client.messageFrames.clear();
+							Client.scheduler.shutdown();
 							Client.restartSocket();
 						}else if(lines[1].equals("~$rejectedinv&")) {
 							String friend = lines[2];					

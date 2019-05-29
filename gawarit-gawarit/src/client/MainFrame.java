@@ -98,8 +98,6 @@ public class MainFrame extends JFrame{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				Client.scheduler.shutdown();
-				Client.messageFrames.clear();
 			}
 		});
 		
