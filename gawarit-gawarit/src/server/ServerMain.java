@@ -13,8 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-
-
 public class ServerMain {
 
     public static HashMap<String, Connection> connections = new HashMap<String, Connection>();

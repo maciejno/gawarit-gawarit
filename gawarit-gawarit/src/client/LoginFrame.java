@@ -135,6 +135,8 @@ public class LoginFrame extends JFrame implements Runnable{
 						}else if(lines[1].equals("~$acceptedinv&")){
 							String friend = lines[2];
 							Client.friendsMap.put(friend, new Boolean("true")); //dodaje nowego znajomego do mapy
+							JOptionPane.showMessageDialog(null, "Dodano znajomego" + friend ,
+									 null, JOptionPane.INFORMATION_MESSAGE);
 							Client.updateFriendsBox();						
 						}else if(lines[1].equals("~$friends&")) {
 							Client.updateFriendsMap(lines); //po usunieciu albo po prostu updateuje mape znajomych

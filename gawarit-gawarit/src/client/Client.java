@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class Client {
@@ -62,12 +63,18 @@ public class Client {
 			//socket = new Socket("10.68.16.164", 44242);
 			//socket = new Socket(ip, 44242);
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));		
+			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			Client.exec.execute(Client.loginFrame);
+			framesMap.put(loginFrame, true);
+			Client.setVisibleFrames();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"Serwer niedostępny pod tym adresem", null, JOptionPane.ERROR_MESSAGE);
+			ipFrame = new IpFrame();
 		} //jest localhost, ale trzeba bedzie zmienic na jakis inny
 		
-		framesMap.put(loginFrame, true);
+		
 	}
 
 	public static String communicate (String message) throws Exception{//wysyla i odbiera z serwera
@@ -98,8 +105,8 @@ public class Client {
     	String status = null;
     	String item = null;
     	for(String key : Client.friendsMap.keySet()) {
-    		if(Client.friendsMap.get(key)) status = " on";
-    		else status = " off";
+    		if(Client.friendsMap.get(key)) status = ": aktywny";
+    		else status = ": nieaktywny";
     		item = key + status;
     		mainFrame.getGui().getChooseFriend().addItem(item);
     	}

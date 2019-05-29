@@ -179,6 +179,7 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 		
 		//LOGOWANIE
 		if(action.equals("login")) {
+			login = loginField.getText();
 			message = Client.createMessage("~$instr&","~$login&", login + "\r\n" + password);
 			try {
 				Client.send(message);//wysyla
@@ -203,6 +204,7 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 		//REJESTRACJA
 		if(action.equals("sign")) {
 			if(newPassword.equals(newPassword2)) {
+				login = newLoginField.getText();
 				message = Client.createMessage("~$instr&", "~$register&", newLogin + "\r\n" + newPassword);
 				try {
 					Client.send(message);//wysyla

@@ -54,8 +54,6 @@ public class IpFrame extends JFrame {
 					e.printStackTrace();
 				}			
 				Client.initialize();
-				Client.exec.execute(Client.loginFrame);
-				Client.setVisibleFrames();
 				frame.dispose();
 			}	
 		});	

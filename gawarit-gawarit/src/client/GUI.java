@@ -52,8 +52,8 @@ public class GUI extends JPanel implements ActionListener{
         panelUpDown = new JPanel();
         sendB = new JButton("Napisz wiadomość");
         //logoutB = new JButton("Wyloguj");
-        dodajB = new JButton("+ znajomego");
-        usunB = new JButton("- znajomego");
+        dodajB = new JButton("Dodaj znajomego");
+        usunB = new JButton("Usuń znajomego");
         imageLabel = new JLabel();
         friendLabel = new JLabel("Do kogo chcesz napisać?");
         chooseFriend = new JComboBox<String>();
@@ -61,7 +61,7 @@ public class GUI extends JPanel implements ActionListener{
         usunField = new JTextField("");
         
         bfimg = ImageIO.read(this.getClass().getResource("/logo_full2.png"));
-        ico = new ImageIcon(bfimg.getScaledInstance(mainFrame.getWidth(), 130,Image.SCALE_SMOOTH));
+        ico = new ImageIcon(bfimg.getScaledInstance(mainFrame.getWidth(), 150,Image.SCALE_SMOOTH));
         imageLabel.setIcon(ico);
 
         sendB.setBackground(Client.krasnyj);
