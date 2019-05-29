@@ -103,7 +103,7 @@ public class LoginFrame extends JFrame implements Runnable{
 			                	line = Client.reader.readLine();
 		            	}
 		            	//DZIELI JĄ NA LINIE
-		            	String [] lines = message.split(System.getProperty("line.separator"));   
+		            	String [] lines = message.split("\r\n");   
 		            	
 		            	//SPRAWDZA CO JEST W LINII PIERWSZEJ
 		            	if(lines[1].equals("~$accpass&")) { //jeśli udało się zalogować lub zarejestrować
