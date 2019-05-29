@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -123,22 +124,42 @@ public class GUI extends JPanel implements ActionListener{
 		//DODAWANIE ZNAJOMEGO
 		}else if(action.equals("add")) {
 			newFriend = dodajField.getText();
-			message = Client.createMessage("~$instr&", "~$addfriend&",newFriend);
-			try {
-				Client.send(message);//wysyla
-			} catch (Exception e) {
-				e.printStackTrace();
-			}			
+			boolean exists = false;
+			for(String i : Client.friendsMap.keySet()) {
+				if(i.equals(newFriend)) exists = true;
+			}
+			if(!exists) {
+				message = Client.createMessage("~$instr&", "~$addfriend&", newFriend);
+				try {
+					Client.send(message);//wysyla
+				} catch (Exception e) {
+					e.printStackTrace();
+				}	
+			}else {
+				JOptionPane.showMessageDialog(null, "Masz już znajomego: " + newFriend + ". Podaj poprawny nick."  ,
+						 null, JOptionPane.INFORMATION_MESSAGE);
+			}
+			dodajField.setText("");
 								
 		//USUWANIE ZNAJOMEGO
 		}else if(action.equals("delete")) {
 			badGuy = usunField.getText();
-			message = Client.createMessage("~$instr&", "~$delfriend&", badGuy);
-			try {
-				Client.send(message);//wysyla
-			} catch (Exception e) {
-				e.printStackTrace();
-			}				
+			boolean exists = false;
+			for(String i : Client.friendsMap.keySet()) {
+				if(i.equals(badGuy)) exists = true;
+			}
+			if(exists) {
+				message = Client.createMessage("~$instr&", "~$delfriend&", badGuy);
+				try {
+					Client.send(message);//wysyla
+				} catch (Exception e) {
+					e.printStackTrace();
+				}	
+			}else {
+				JOptionPane.showMessageDialog(null, "Nie masz znajomego: " + badGuy + ". Podaj poprawny nick."  ,
+						 null, JOptionPane.INFORMATION_MESSAGE);
+			}
+			usunField.setText("");
 		}
 	}
 }
