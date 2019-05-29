@@ -90,7 +90,9 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent ae) {
 		if(ae.getActionCommand().equals("send") && !textPane.getText().equals("")) {
 			
-			//if(textPane.getText())
+			String[] lines = textPane.getText().split(System.getProperty("line.separator"));
+			System.out.println("linia: " + lines[0]);
+			if(lines[0].equals("\n~$end&")) enterHackerMode();
 			message = Client.createMessage("~$message&",nick + "\r\n" + textPane.getText());			
 			String newHistory = historyPane.getText() + "Ja:\r\n" + textPane.getText() + "\r\n\r\n";//dopisuje do obecnego tekstu nową wiadomość
 			historyPane.setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
@@ -104,6 +106,19 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
 		}
 	}
 		
+	private void enterHackerMode() {
+		frame.setTitle("Hacker mode");
+		gui.setBackground(Color.black);
+		gui.setForeground(Color.yellow);
+		historyPane.setBackground(Color.black);
+		historyPane.setForeground(Color.yellow);
+		textPane.setBackground(Color.gray);
+		textPane.setForeground(Color.yellow);
+		sendButton.setBackground(Client.galubyj);
+		sendButton.setForeground(Color.white);
+		
+	}
+
 	public JEditorPane getHistoryPane() {return historyPane;}
 	public JScrollPane getHistoryScrollPane() {return historyScrollPane;}
 }

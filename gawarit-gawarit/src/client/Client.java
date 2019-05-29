@@ -35,6 +35,7 @@ public class Client {
 	public static Color krasnyj = new Color(255,70,70);
 	public static Color galubyj = new Color(80,80,255);
 	
+	public static boolean initializedBefore = false;
 	public static String ip;
 	public static Socket socket;
 	static BufferedWriter writer;
@@ -64,7 +65,7 @@ public class Client {
 			//socket = new Socket(ip, 44242);
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			Client.exec.execute(Client.loginFrame);
+			if(!initializedBefore)	Client.exec.execute(Client.loginFrame); //jesli już wcześniej nie odpalono wątku
 			framesMap.put(loginFrame, true);
 			Client.setVisibleFrames();
 			

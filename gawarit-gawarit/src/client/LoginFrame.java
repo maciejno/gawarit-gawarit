@@ -127,9 +127,12 @@ public class LoginFrame extends JFrame implements Runnable{
 							Client.framesMap.put(Client.loginFrame, true);
 							Client.framesMap.put(Client.mainFrame, false);
 							Client.setVisibleFrames();
+							for(MessageFrame val : Client.messageFrames.values()) {
+					    		val.dispose();
+					    	}
 							Client.messageFrames.clear();
-							Client.scheduler.shutdown();
 							Client.restartSocket();
+							Client.scheduler.shutdown();
 						}else if(lines[1].equals("~$rejectedinv&")) {
 							String friend = lines[2];					
 							JOptionPane.showMessageDialog(null, "Nie udało się dodać znajomego " + friend 
@@ -168,6 +171,8 @@ public class LoginFrame extends JFrame implements Runnable{
 		            }
 		        }catch (IOException e) {
 		            e.printStackTrace();
+		            JOptionPane.showMessageDialog(null,"Zerwane połączenie z serwerem", null, JOptionPane.ERROR_MESSAGE);
+		            System.exit(2);
 		        }				
 			}
 		}		

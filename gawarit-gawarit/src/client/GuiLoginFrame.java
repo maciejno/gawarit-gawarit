@@ -186,7 +186,7 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			/*Client.scheduler = Executors.newScheduledThreadPool(1);
+			Client.scheduler = Executors.newScheduledThreadPool(1);
 			Client.scheduler.scheduleAtFixedRate( (new Runnable() {// co pewien czas wysyła żądanie listy znajomych
 				@Override
 				public void run() {
@@ -197,7 +197,7 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 						e.printStackTrace();
 					}
 				}
-			}), 5, 15, SECONDS);*/
+			}), 5, 15, SECONDS);
 			
 		}
 		
