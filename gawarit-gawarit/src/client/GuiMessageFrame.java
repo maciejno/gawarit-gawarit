@@ -92,7 +92,7 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
 			
 			String[] lines = textPane.getText().split(System.getProperty("line.separator"));
 			System.out.println("linia: " + lines[0]);
-			if(lines[0].equals("\r\n~$end&")) enterHackerMode();
+			if(lines[0].equals("\n~$end&")) enterHackerMode();
 			message = Client.createMessage("~$message&",nick + "\r\n" + textPane.getText());			
 			String newHistory = historyPane.getText() + "Ja:\r\n" + textPane.getText() + "\r\n\r\n";//dopisuje do obecnego tekstu nową wiadomość
 			historyPane.setText(newHistory);// ustawia na nowo tekst w oknie historii wiadomości
