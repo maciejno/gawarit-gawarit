@@ -55,6 +55,8 @@ public class User {
 
     boolean register(String login, String pass) {
         try {
+            username = login;
+            password = pass;
             File file = new File(login + ".txt");
 
             if(file.exists())
@@ -64,9 +66,7 @@ public class User {
 
             FileWriter writer = new FileWriter(file);
             writer.write(pass + "\n");
-            writer.write(login + "\n");
             writer.close();
-            username = login;
             addFriend(login);
         } catch (IOException e) {
             e.printStackTrace();
@@ -88,7 +88,7 @@ public class User {
         try {
             File file = new File(username + ".txt");
 
-            if(file.exists()) {
+            if(!file.exists()) {
                 System.out.println("Problem: pliku nie odnaleziono");
                 return;
             }
