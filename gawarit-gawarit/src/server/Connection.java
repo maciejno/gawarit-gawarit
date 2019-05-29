@@ -91,11 +91,22 @@ public class Connection implements Runnable {
                         if(!receiver.readLine().equals("~$end&"))
                             continue;
                         ServerMain.Monitor("Nowy uzytkownik: " + login);
-                        System.out.println(user.register(login, pass));
-
-
-                        ServerMain.Monitor("rejestracja?!");
-                        break;
+                        if (user.register(login, pass)) {
+                            register();
+                            ServerMain.Monitor("Uzytkownik " + user.username + " zarejestrowal sie.");
+                            break;
+                        } else {
+                            rejpass("Podana nazwa juz istnieje");
+                            ServerMain.Monitor("Nie udalo sie zarejestrowac uzytkownika " + login);
+                            ServerMain.connections.remove(tempUsername);
+                            try {
+                                socket.close();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                                ServerMain.Monitor("Wysyapil problem z zerwaniem polaczenia. (register procedure)");
+                            }
+                            return;
+                        }
                     }
 
                 }
@@ -106,7 +117,7 @@ public class Connection implements Runnable {
                 if(ServerMain.connections.containsKey(user.username)) //jeśli user już się zalogował
                     ServerMain.connections.remove(user.username);
                 ServerMain.StatusUpdate();
-                ServerMain.Monitor("Wysyapil problem z polaczeniem. (login procedure)");
+                ServerMain.Monitor("Zerwano polaczenie. (login procedure)");
                 try {
                     socket.close();
                 } catch (IOException ex) {
@@ -127,7 +138,11 @@ public class Connection implements Runnable {
                 if(line.equals("~$instr&")) {
                     line = receiver.readLine();
 
-
+                    if(line.equals("~$friends&")) {
+                        System.out.println("Uzytkownik " + user.username + " prosi o znajomych.");
+                        if(receiver.readLine().equals("~$end&"))
+                            sendFriends();
+                    }
 
                     if(line.equals("~$logout&")) { //procedura wylogowywania
                         if (receiver.readLine().equals("~$end&")) {
@@ -135,6 +150,89 @@ public class Connection implements Runnable {
                             ServerMain.connections.remove(user.username);
                             ServerMain.StatusUpdate();
                             return;
+                        }
+                    }
+
+
+                    if(line.equals("~$addfriend&")) {
+                        try {
+                            String newfriend = receiver.readLine();
+                            if(receiver.readLine().equals("~$end&")) {
+                                if (user.friends.contains(newfriend)) { //gdy juz jest w znajomych
+                                    transmitter.write("~$instr&");
+                                    transmitter.write("\n");
+                                    transmitter.write("~$acceptedinv&");
+                                    transmitter.write("\n");
+                                    transmitter.write(newfriend);
+                                    transmitter.write("\n");
+                                    transmitter.write("~$end&");
+                                    transmitter.write("\n");
+                                    transmitter.flush();
+                                    ServerMain.Monitor(user.username + " >+<< " + newfriend + " (juz jest w znajomych)");
+                                }
+                                else{ //gdy nie ma w znajomych
+                                    if(ServerMain.connections.containsKey(newfriend)) { //gdy zalogowany
+                                        ServerMain.connections.get(newfriend).transmitter.write("~$instr&");
+                                        ServerMain.connections.get(newfriend).transmitter.write("\n");
+                                        ServerMain.connections.get(newfriend).transmitter.write("~$newinv&");
+                                        ServerMain.connections.get(newfriend).transmitter.write("\n");
+                                        ServerMain.connections.get(newfriend).transmitter.write(user.username);
+                                        ServerMain.connections.get(newfriend).transmitter.write("\n");
+                                        ServerMain.connections.get(newfriend).transmitter.write("~$end&");
+                                        ServerMain.connections.get(newfriend).transmitter.write("\n");
+                                        ServerMain.connections.get(newfriend).transmitter.flush();
+                                        if(ServerMain.connections.get(newfriend).receiver.readLine().equals("~$instr&")) { //drugi odpowiada
+                                            String response = ServerMain.connections.get(newfriend).receiver.readLine();
+                                            String responsefriend = ServerMain.connections.get(newfriend).receiver.readLine();
+                                            if(ServerMain.connections.get(newfriend).receiver.readLine().equals("~$end&")) { //odpowiadamy pierwszemu
+                                                transmitter.write("~$instr&");
+                                                transmitter.write("\n");
+                                                if(response.equals("~$accinv&")) {
+                                                    user.addFriend(responsefriend);
+                                                    transmitter.write("~$acceptedinv&");
+                                                    ServerMain.Monitor(user.username + " >+>> " + responsefriend);
+                                                }
+                                                else if(response.equals("~$rejinv&")) {
+                                                    transmitter.write("~$rejectedinv&");
+                                                    ServerMain.Monitor(user.username + " >+>xx " + responsefriend);
+                                                }
+                                                transmitter.write("\n");
+                                                transmitter.write(responsefriend);
+                                                transmitter.write("\n");
+                                                transmitter.write("~$end&");
+                                                transmitter.write("\n");
+                                                transmitter.flush();
+                                            }
+                                        }
+                                    }
+                                    else { //gdy niezalogowany
+                                        transmitter.write("~$instr&");
+                                        transmitter.write("\n");
+                                        transmitter.write("~$rejectedinv&");
+                                        transmitter.write("\n");
+                                        transmitter.write(newfriend);
+                                        transmitter.write("\n");
+                                        transmitter.write("~$end&");
+                                        transmitter.write("\n");
+                                        transmitter.flush();
+                                        ServerMain.Monitor(user.username + " >+<< " + newfriend + " (niezalogowany)");
+                                    }
+                                }
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            ServerMain.Monitor("Problem z dodawaniem znajomych. (" + user.username + ")");
+                        }
+                    }
+
+                    if(line.equals("~$delfriend&")) {
+                        String deletedfriend = receiver.readLine();
+                        if(receiver.readLine().equals("~$end&")) {
+                            if(user.friends.contains(deletedfriend)) {
+                                user.removeFriend(deletedfriend);
+                                sendFriends();
+                                ServerMain.Monitor(user.username + " >-- " + deletedfriend);
+                            }
                         }
                     }
                 }
@@ -220,6 +318,28 @@ public class Connection implements Runnable {
         }
     }
 
+    private void register() {
+        try {
+            transmitter.write("~$instr&");
+            transmitter.write("\n");
+            transmitter.write("~$accpass&");
+            transmitter.write("\n");
+            transmitter.write(user.username);
+            transmitter.write("\n");
+            transmitter.write("true");
+            transmitter.write("\n");
+            transmitter.write("~$end&");
+            transmitter.write("\n");
+            transmitter.flush();
+            ServerMain.connections.put(user.username, ServerMain.connections.get(tempUsername));
+            ServerMain.connections.remove(tempUsername);
+        } catch (IOException e) {
+            e.printStackTrace();
+            ServerMain.Monitor("Problem z rejestracja.");
+        }
+
+    }
+
 
     void sendMessage(String target, String message) { //funkcja do osługi wysyłania wiadomości
         try {
@@ -269,5 +389,32 @@ public class Connection implements Runnable {
             ServerMain.Monitor("Problem z zerwaniem polaczenia. (" + user.username + " logout)");
         }
     }
+
+    void sendFriends() {
+        try {
+            System.out.println("Wywylanie przyjaciol.");
+            transmitter.write("~$instr&");
+            transmitter.write("\n");
+            transmitter.write("~$friends&");
+            transmitter.write("\n");
+            for (String friend : user.friends) {
+                transmitter.write(friend);
+                transmitter.write("\n");
+                if (ServerMain.connections.containsKey(friend))
+                    transmitter.write("true");
+                else
+                    transmitter.write("false");
+                transmitter.write("\n");
+            }
+            transmitter.write("~$end&");
+            transmitter.write("\n");
+            transmitter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+            ServerMain.Monitor("Problem z wyslaniem znajomych. (" + user.username + ")");
+        }
+    }
+
+
 
 }

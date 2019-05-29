@@ -26,7 +26,7 @@ public class User {
         InputStreamReader streamReader = null;
         BufferedReader bufferedReader = null;
         try {
-            InputStream inputStream = getClass().getResourceAsStream("/" + login + ".txt");
+            InputStream inputStream = new FileInputStream(new File(login + ".txt"));
             streamReader = new InputStreamReader(inputStream); // Otwieramy readera
             bufferedReader = new BufferedReader(streamReader); // Buforujemy readera
             String truePass = bufferedReader.readLine();//wczytanie linii tekstu do bufora
@@ -53,15 +53,30 @@ public class User {
         return true;
     }
 
-    String register(String login, String pass) {
+    boolean register(String login, String pass) {
+        try {
+            File file = new File(login + ".txt");
 
+            if(file.exists())
+                return false;
 
-    return "nie dziala";
-        //file.createNewFile();
+            file.createNewFile();
+
+            FileWriter writer = new FileWriter(file);
+            writer.write(pass + "\n");
+            writer.write(login + "\n");
+            writer.close();
+            username = login;
+            addFriend(login);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 
-    void PrintInfo() { //do debugowania
+    void printInfo() { //do debugowania
         System.out.println("Username: " + username );
         System.out.println( "Password: " + password );
         System.out.println("Towarzysze " + username + ":" );
@@ -69,8 +84,35 @@ public class User {
             System.out.println(friend);
     }
 
-    void RewriteUser() {
+    void rewriteUser() {
+        try {
+            File file = new File(username + ".txt");
 
+            if(file.exists()) {
+                System.out.println("Problem: pliku nie odnaleziono");
+                return;
+            }
+            file.createNewFile();
+            FileWriter writer = new FileWriter(file);
+            writer.write(password + "\n");
+            for (String friend : friends)
+                writer.write(friend + "\n");
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+    }
+
+    public void addFriend(String friend) {
+        friends.add(friend);
+        rewriteUser();
+    }
+
+    public void removeFriend(String friend) {
+        friends.remove(friend);
+        rewriteUser();
     }
 
 }
