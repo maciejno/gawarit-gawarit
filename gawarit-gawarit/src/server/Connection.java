@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -182,6 +183,7 @@ public class Connection implements Runnable {
                                 user.removeFriend(deletedfriend);
                                 sendFriends();
                                 ServerMain.Monitor(user.username + " >-- " + deletedfriend);
+                                eraseFriend(deletedfriend);
                             }
                         }
                     }
@@ -439,5 +441,54 @@ public class Connection implements Runnable {
             ServerMain.Monitor("Problem z odrzuceniem zaproszenia. (" + user.username + " " + target + ")");
         }
         return;
+    }
+
+    private void eraseFriend(String erasedfriend) {
+
+        if(ServerMain.connections.containsKey(erasedfriend))
+            ServerMain.connections.get(erasedfriend).user.friends.remove(user.username);
+
+        List<String> tempFriends = new ArrayList<String>();
+        String pass;
+        InputStreamReader streamReader = null;
+        BufferedReader bufferedReader = null;
+        try {
+            InputStream inputStream = new FileInputStream(new File(erasedfriend + ".txt"));
+            streamReader = new InputStreamReader(inputStream);
+            bufferedReader = new BufferedReader(streamReader);
+            pass = bufferedReader.readLine();
+            String friend;
+            while(true){
+                friend =  bufferedReader.readLine();
+                if(friend!=null) tempFriends.add(friend);
+                else break;
+            }
+            streamReader.close();
+            bufferedReader.close();
+        }catch (Exception e) {
+            System.err.println("Blad przy otwarciu pliku");
+            return;
+        }
+
+        tempFriends.remove(user.username);
+
+        try {
+            File file = new File(erasedfriend + ".txt");
+
+            if(!file.exists()) {
+                System.out.println("Problem: pliku nie odnaleziono");
+                return;
+            }
+            file.createNewFile();
+            FileWriter writer = new FileWriter(file);
+            writer.write(pass + "\r\n");
+            for (String fr : tempFriends)
+                writer.write(fr + "\r\n");
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+            }
     }
 }
