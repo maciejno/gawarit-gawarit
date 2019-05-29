@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +29,7 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
     String history = "";
     String message = "здравствуйте!";
     JButton sendButton;
-    JLabel  nickLabel;
+    JTextField  nickLabel;
     JEditorPane textPane,historyPane; //tu jest historia konwersacji i wiadomosc do wyslania
     JScrollPane historyScrollPane,scrollPane;
     JPanel panelDown;
@@ -39,7 +40,11 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
         this.nick = frame.getUsername();
         panelDown = new JPanel();
         historyScrollPane = new JScrollPane();
-        nickLabel = new JLabel(nick, SwingConstants.CENTER);
+        nickLabel = new JTextField("Chat z " + nick);
+        nickLabel.setHorizontalAlignment(JTextField.CENTER);
+        nickLabel.setEditable(false);
+        nickLabel.setForeground(Color.WHITE);
+        nickLabel.setBackground(Client.galubyj);
         textPane = new JEditorPane();
         historyPane = new JEditorPane();
         scrollPane = new JScrollPane(textPane, 
@@ -49,6 +54,7 @@ public class GuiMessageFrame extends JPanel implements ActionListener{
         historyPane.setText(history);
         textPane.setText(message);//ustawia wiadomosc powitalna
         sendButton = new JButton("Wyślij");
+        sendButton.setBackground(Client.krasnyj);
         historyPane.setEditable(false); //zeby historii  nie edytowac
         
         panelDown.setLayout(new GridLayout(2,1));
