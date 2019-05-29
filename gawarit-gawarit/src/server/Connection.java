@@ -103,7 +103,7 @@ public class Connection implements Runnable {
                                 socket.close();
                             } catch (IOException ex) {
                                 ex.printStackTrace();
-                                ServerMain.Monitor("Wysyapil problem z zerwaniem polaczenia. (register procedure)");
+                                ServerMain.Monitor("Wystapil problem z zerwaniem polaczenia. (register procedure)");
                             }
                             return;
                         }
@@ -122,7 +122,7 @@ public class Connection implements Runnable {
                     socket.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
-                    ServerMain.Monitor("Wysyapil problem z zerwaniem polaczenia. (login procedure)");
+                    ServerMain.Monitor("Wystapil problem z zerwaniem polaczenia. (login procedure)");
                 }
                 return;
             }
