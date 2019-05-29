@@ -161,17 +161,17 @@ public class Connection implements Runnable {
                     }
 
                     if(line.equals("~$accinv&")) {
-                        String newfriend = receiver.readLine();
+                        String acceptedfriend = receiver.readLine();
                         if(receiver.readLine().equals("~$end&")) {
-                            accinv(newfriend, user.username);
+                            accinv(acceptedfriend);
                         }
                     }
 
 
                     if(line.equals("~$rejinv&")) {
-                        String newfriend = receiver.readLine();
+                        String rejectedfriend = receiver.readLine();
                         if(receiver.readLine().equals("~$end&")) {
-                            rejinv(newfriend);
+                            rejinv(rejectedfriend);
                         }
                     }
 
@@ -375,13 +375,9 @@ public class Connection implements Runnable {
         try {
             System.out.println("addfriend " + target);
             if(user.friends.contains(target)) {
-                accinv(target, user.username);
+                //accinv(target, user.username);
                 return;
-                //sprawdzić czy istnieje
             }
-
-            if(ServerMain.connections.get(target).user.friends.contains(user.username))
-                accinv(user.username, target);
 
             ServerMain.connections.get(target).transmitter.write("~$instr&");
             ServerMain.connections.get(target).transmitter.write("\r\n");
@@ -394,51 +390,53 @@ public class Connection implements Runnable {
             ServerMain.connections.get(target).transmitter.flush();
         } catch (IOException e) {
             e.printStackTrace();
-            ServerMain.Monitor("Problem z wyslaniem zaproszenia. (" + user.username + " " + target + ")");
+            ServerMain.Monitor("Problem z wyslaniem zaproszenia. (" + user.username + " > " + target + ")");
         }
         return;
     }
 
 
 
-    void accinv(String toWho, String whoAccepted) {
+    void accinv(String target) {
         try {
-            System.out.println("accinv " + toWho);
-            ServerMain.connections.get(toWho).transmitter.write("~$instr&");
-            ServerMain.connections.get(toWho).transmitter.write("\r\n");
-            ServerMain.connections.get(toWho).transmitter.write("~$acceptedinv&");
-            ServerMain.connections.get(toWho).transmitter.write("\r\n");
-            ServerMain.connections.get(toWho).transmitter.write(whoAccepted);
-            ServerMain.connections.get(toWho).transmitter.write("\r\n");
-            ServerMain.connections.get(toWho).transmitter.write("~$end&");
-            ServerMain.connections.get(toWho).transmitter.write("\r\n");
-            ServerMain.connections.get(toWho).transmitter.flush();
-            ServerMain.connections.get(toWho).user.addFriend(user.username);
-            user.addFriend(whoAccepted);
-            ServerMain.Monitor("Znajomi: " + toWho + " >+>> " + user.username);
+            System.out.println(user.username + "accepted invitation");
+            ServerMain.connections.get(target).transmitter.write("~$instr&");
+            ServerMain.connections.get(target).transmitter.write("\r\n");
+            ServerMain.connections.get(target).transmitter.write("~$acceptedinv&");
+            ServerMain.connections.get(target).transmitter.write("\r\n");
+            ServerMain.connections.get(target).transmitter.write(user.username);
+            ServerMain.connections.get(target).transmitter.write("\r\n");
+            ServerMain.connections.get(target).transmitter.write("~$end&");
+            ServerMain.connections.get(target).transmitter.write("\r\n");
+            ServerMain.connections.get(target).transmitter.flush();
+            if(!ServerMain.connections.get(target).user.friends.contains((user.username)))
+                ServerMain.connections.get(target).user.addFriend(user.username);
+            if(!user.friends.contains(target))
+                user.addFriend(target);
+            ServerMain.Monitor("Znajomi: " + target + " >+>> " + user.username);
         } catch (IOException e) {
             e.printStackTrace();
-            ServerMain.Monitor("Problem z zaakceptowaniem zaproszenia. (" + user.username + " " + toWho + ")");
+            ServerMain.Monitor("Problem z zaakceptowaniem zaproszenia. (" + user.username + " " + target + ")");
         }
         return;
     }
 
-    void rejinv(String newfriend) {
+    void rejinv(String target) {
         try {
-            System.out.println("rejinv " + newfriend);
-            ServerMain.connections.get(newfriend).transmitter.write("~$instr&");
-            ServerMain.connections.get(newfriend).transmitter.write("\r\n");
-            ServerMain.connections.get(newfriend).transmitter.write("~$rejectedinv&");
-            ServerMain.connections.get(newfriend).transmitter.write("\r\n");
-            ServerMain.connections.get(newfriend).transmitter.write(user.username);
-            ServerMain.connections.get(newfriend).transmitter.write("\r\n");
-            ServerMain.connections.get(newfriend).transmitter.write("~$end&");
-            ServerMain.connections.get(newfriend).transmitter.write("\r\n");
-            ServerMain.connections.get(newfriend).transmitter.flush();
-            ServerMain.Monitor("Znajomi: " + newfriend + " >+<<-- " + user.username);
+            System.out.println(target + "rejinv");
+            ServerMain.connections.get(target).transmitter.write("~$instr&");
+            ServerMain.connections.get(target).transmitter.write("\r\n");
+            ServerMain.connections.get(target).transmitter.write("~$rejectedinv&");
+            ServerMain.connections.get(target).transmitter.write("\r\n");
+            ServerMain.connections.get(target).transmitter.write(user.username);
+            ServerMain.connections.get(target).transmitter.write("\r\n");
+            ServerMain.connections.get(target).transmitter.write("~$end&");
+            ServerMain.connections.get(target).transmitter.write("\r\n");
+            ServerMain.connections.get(target).transmitter.flush();
+            ServerMain.Monitor("Znajomi: " + target + " >+<<-- " + user.username);
         } catch (IOException e) {
             e.printStackTrace();
-            ServerMain.Monitor("Problem z odrzuceniem zaproszenia. (" + user.username + " " + newfriend + ")");
+            ServerMain.Monitor("Problem z odrzuceniem zaproszenia. (" + user.username + " " + target + ")");
         }
         return;
     }

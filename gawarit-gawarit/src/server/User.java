@@ -29,10 +29,11 @@ public class User {
             InputStream inputStream = new FileInputStream(new File(login + ".txt"));
             streamReader = new InputStreamReader(inputStream); // Otwieramy readera
             bufferedReader = new BufferedReader(streamReader); // Buforujemy readera
-            String truePass = bufferedReader.readLine();//wczytanie linii tekstu do bufora
+            String truePass = bufferedReader.readLine();
             if(!pass.equals(truePass))
                 return false;
 
+            password = pass;
             String friend;
             while(true){
                 friend =  bufferedReader.readLine();
@@ -94,9 +95,9 @@ public class User {
             }
             file.createNewFile();
             FileWriter writer = new FileWriter(file);
-            writer.write(password + "\n");
+            writer.write(password + "\r\n");
             for (String friend : friends)
-                writer.write(friend + "\n");
+                writer.write(friend + "\r\n");
 
             writer.close();
         } catch (IOException e) {
