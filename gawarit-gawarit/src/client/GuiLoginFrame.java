@@ -197,7 +197,7 @@ public class GuiLoginFrame extends JPanel implements KeyListener, ActionListener
 						e.printStackTrace();
 					}
 				}
-			}), 5, 15, SECONDS);
+			}), 5, 5, SECONDS);
 			
 		}
 		

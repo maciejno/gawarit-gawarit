@@ -26,6 +26,7 @@ public class IpFrame extends JFrame {
 		ImageIcon mainIcon = new ImageIcon(this.getClass().getResource("/logo_mini.png"));
 		this.setIconImage(mainIcon.getImage());
 		this.setTitle("Gawarit-Gawarit");
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		ipPanel.setLayout(new BorderLayout());
 		
 		JTextField ipField = new JTextField(Client.ip);
