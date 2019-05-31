@@ -377,9 +377,31 @@ public class Connection implements Runnable {
         try {
             System.out.println("addfriend " + target);
             if(user.friends.contains(target)) {
-                //accinv(target, user.username);
+                transmitter.write("~$instr&");
+                transmitter.write("\r\n");
+                transmitter.write("~$acceptedinv&");
+                transmitter.write("\r\n");
+                transmitter.write(target);
+                transmitter.write("\r\n");
+                transmitter.write("~$end&");
+                transmitter.write("\r\n");
+                transmitter.flush();
                 return;
             }
+
+            if(!ServerMain.connections.containsKey(target)) {
+                transmitter.write("~$instr&");
+                transmitter.write("\r\n");
+                transmitter.write("~$rejectedinv&");
+                transmitter.write("\r\n");
+                transmitter.write(target);
+                transmitter.write("\r\n");
+                transmitter.write("~$end&");
+                transmitter.write("\r\n");
+                transmitter.flush();
+                return;
+            }
+
 
             ServerMain.connections.get(target).transmitter.write("~$instr&");
             ServerMain.connections.get(target).transmitter.write("\r\n");
